@@ -51,10 +51,10 @@ class Vendor:
         except:
             raise Exception("Invalid Shop")
 
-    def addProduct(self, shop, product_name, product_desc):
+    def addProduct(self, shop, product_name, product_desc, quantity):
         try:
             product = Product(name=product_name,
-                              description=product_desc, shop=shop)
+                              description=product_desc, quantity=quantity, shop=shop)
             product.save()
         except:
             raise Exception("Invalid Product")

@@ -41,7 +41,8 @@ class Store:
     def addProduct(self, request):
         try:
             vendor = Accounts().getAccount(request.data.id)
-            Vendor().addProduct(vendor.shop, request.data.product_name, request.data.product_desc)
+            Vendor().addProduct(vendor.shop, request.data.product_name,
+                                request.data.product_desc, request.data.quantity)
             return Response(request.data, status=status.HTTP_201_CREATED)
         except Exception as e:
             return Response(request.data, status=status.HTTP_400_BAD_REQUEST)

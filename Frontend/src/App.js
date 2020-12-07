@@ -19,29 +19,31 @@ import Login from "./Components/Login";
 import VendorOptions from "./Components/Vendor/VendorOptions";
 
 function App() {
-  const [dark_theme, changeThemePreference] = useState(true);
-//  let theme = dark_theme ? DarkTheme : LightTheme;
-let theme = LightTheme ? LightTheme : DarkTheme;
+	const [dark_theme, changeThemePreference] = useState(true);
+	let theme = dark_theme ? DarkTheme : LightTheme;
+	function getTheme() {
+		return [dark_theme, changeThemePreference];
+	}
 
-  function getTheme() {
-    return [dark_theme, changeThemePreference];
-  }
-
-  return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Router>
-        <Header themeState={getTheme} />
-        <Switch>
-          <Route exact path="/">
-      <Login/>  
-			<VendorOptions/ >
-
-          </Route>
-        </Switch>
-        <Footer />
-      </Router>
-    </ThemeProvider>
+	return (
+		<ThemeProvider theme={theme}>
+			<CssBaseline />
+			<Router>
+				<Header themeState={getTheme} />
+				<Switch>
+					<Route exact path = "/">
+						<Home />
+					</Route>
+					<Route exact path="/login">
+						<Login />
+					</Route>
+					<Route exact path="/vendor">
+						<VendorOptions />
+					</Route>
+				</Switch>
+				<Footer />
+			</Router>
+		</ThemeProvider>
   );
 }
 

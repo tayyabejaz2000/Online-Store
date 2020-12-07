@@ -11,6 +11,7 @@ import {
 	IconButton,
 	Menu,
 	MenuItem,
+	Button,
 } from '@material-ui/core'
 
 //Icons
@@ -46,6 +47,9 @@ function Header(props)
 						<Typography variant="h6" className = {classes.title}>
 						Online Store
 						</Typography>
+						<Button color="inherit" onClick={() => {window.location.href = "/login"}}>
+							Login
+						</Button>
 						<IconButton color="inherit" aria-label="themeIcon" onClick={themeChange}>
 							{themeIcon}
 						</IconButton>
