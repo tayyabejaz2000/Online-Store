@@ -34,7 +34,7 @@ function VendorProductCard(props) {
 		</Grid>
 	)
 	return (
-		<ProductCard productName={props.productName} category={props.category} price={props.price} quantity={props.quantity} control_buttons={controlButtons}/>
+		<ProductCard productName={props.productName} category={props.category} price={props.price} quantity={props.quantity} control_buttons={controlButtons} onClick={props.onClick}/>
 	)
 }
 
