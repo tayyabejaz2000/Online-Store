@@ -1,5 +1,5 @@
+.gitignore
 .vscode
 __pycache__
 node_modules
 db.sqlite3
-Pipfile.lock
