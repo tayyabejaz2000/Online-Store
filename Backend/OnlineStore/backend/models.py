@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractUser
 
 
 class UserAccount(AbstractUser):
-    phone_number = models.CharField(max_length=12, null=False)
+    phone_number = models.CharField(max_length=12, null=True)
     user_type = models.CharField(max_length=2, default='U', null=False, choices=[
         ('V', 'Vendor'),
         ('U', 'User'),

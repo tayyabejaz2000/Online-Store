@@ -1,8 +1,4 @@
-from django.core.exceptions import ObjectDoesNotExist
-from rest_framework.response import Response
-from rest_framework import status
-from rest_framework_simplejwt.tokens import RefreshToken
-
+from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from .tokenHandler import ObtainToken
 from ..models import BillingAddress, Product, Shop, UserAccount
 from ..serializers import AccountsSerializer
@@ -19,14 +15,18 @@ class Accounts:
             if user:
                 user.save()
                 return None
-        raise Exception("Exception")
+        raise Exception("Couldn't Create User with data: " + str(user_data))
 
     def logout_user(self, refresh_token):
         try:
             token = RefreshToken(refresh_token)
             token.blacklist()
+        except TokenError as e:
+            raise Exception("Invalid Token, [Refresh Token]:" +
+                            str(refresh_token) + ", [Exception]:" + str(e))
         except Exception as e:
-            raise Exception("Exception")
+            raise Exception("Couldn't Logout User, [Refresh Token]:" +
+                            str(refresh_token))
 
     def getAccount(self, id):
         return UserAccount.objects.get(id=id)
@@ -35,11 +35,12 @@ class Accounts:
 class User:
     def addBillingAddress(self, user, address):
         try:
-            address = BillingAddress(
-                user=user, billingAddress=address)
+            address = BillingAddress(user=user,
+                                     billingAddress=address)
             address.save()
-        except:
-            raise Exception("Invalid Address")
+        except Exception as e:
+            raise Exception("Couldn't add address for User, [Address]:" +
+                            str(address))
 
 
 class Vendor:
@@ -49,19 +50,22 @@ class Vendor:
                         location=shop_location)
             shop.save()
         except:
-            raise Exception("Invalid Shop")
+            raise Exception("Couldn't add Shop for Vendor, [Shop Name]:" +
+                            str(shop_name) + ", [Shop Location]:" + str(shop_location))
 
     def addProduct(self, shop, product_name, product_desc, quantity):
         try:
-            product = Product(name=product_name,
-                              description=product_desc, quantity=quantity, shop=shop)
+            product = Product(name=product_name, description=product_desc,
+                              quantity=quantity, shop=shop)
             product.save()
         except:
-            raise Exception("Invalid Product")
+            raise Exception("Couldn't add Product for Shop, [Product Name]:" + str(product_name) +
+                            ", [Product Description]:" + str(product_desc) + ", [Quantity]:" + str(quantity))
 
     def removeProduct(self, product_id):
         try:
             product = Product.objects.get(id=product_id)
             product.delete()
         except:
-            raise Exception("Cant Delete Invalid Product")
+            raise Exception("Couldn't delete Product: [Product ID]:" +
+                            str(product_id))

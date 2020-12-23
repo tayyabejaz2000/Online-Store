@@ -1,9 +1,9 @@
-from rest_framework import permissions
+from rest_framework import permissions, status
+from rest_framework.response import Response
 from rest_framework.views import APIView
 from .BusinessLogic.Controller import Store
 
 # Views just forward all calls to Controller
-
 controller = Store()
 
 
@@ -17,7 +17,12 @@ class Signup(APIView):
     authentication_classes = ()
 
     def post(self, request):
-        return controller.create_user(request)
+        try:
+            controller.create_user(request.data)
+            return Response(status=status.HTTP_201_CREATED)
+        except Exception as e:
+            print("Exception Thrown: ", e)  # Log error
+            return Response(data=str(e), status=status.HTTP_400_BAD_REQUEST)
 
 
 class Logout(APIView):
@@ -25,7 +30,12 @@ class Logout(APIView):
     authentication_classes = ()
 
     def post(self, request):
-        return controller.logout_user()
+        try:
+            controller.logout_user(request.data["refresh_token"])
+            return Response(status=status.HTTP_205_RESET_CONTENT)
+        except Exception as e:
+            print("Exception Thrown: ", e)  # Log error
+            return Response(data=str(e), status=status.HTTP_400_BAD_REQUEST)
 
 
 class AddBillingAddress(APIView):
@@ -33,7 +43,12 @@ class AddBillingAddress(APIView):
     authentication_classes = ()
 
     def post(self, request):
-        return controller.addBillingAddress(request)
+        try:
+            controller.addBillingAddress(request.data.id, request.data.address)
+            return Response(status=status.HTTP_201_CREATED)
+        except Exception as e:
+            print("Exception Thrown: ", e)  # Log error
+            return Response(data=str(e), status=status.HTTP_400_BAD_REQUEST)
 
 
 class SetShop(APIView):
@@ -41,7 +56,13 @@ class SetShop(APIView):
     authentication_classes = ()
 
     def post(self, request):
-        return controller.setShop(self, request)
+        try:
+            controller.setShop(request.data.id, request.data.shop_name,
+                               request.data.shop_location)
+            return Response(status=status.HTTP_201_CREATED)
+        except Exception as e:
+            print("Exception Thrown: ", e)  # Log error
+            return Response(data=str(e), status=status.HTTP_400_BAD_REQUEST)
 
 
 class AddProduct(APIView):
@@ -49,7 +70,13 @@ class AddProduct(APIView):
     authentication_classes = ()
 
     def post(self, request):
-        return controller.addProduct(request)
+        try:
+            controller.addProduct(request.data.id, request.data.product_name,
+                                  request.data.product_desc, int(request.data.quantity))
+            return Response(status=status.HTTP_201_CREATED)
+        except Exception as e:
+            print("Exception Thrown: ", e)  # Log error
+            return Response(data=str(e), status=status.HTTP_400_BAD_REQUEST)
 
 
 class RemoveProduct(APIView):
@@ -57,6 +84,12 @@ class RemoveProduct(APIView):
     authentication_classes = ()
 
     def post(self, request):
-        return controller.removeProduct(request)
+        try:
+            controller.removeProduct(request.data.product_id)
+            return Response(status=status.HTTP_205_RESET_CONTENT)
+        except Exception as e:
+            print("Exception Thrown: ", e)  # Log error
+            return Response(data=str(e), status=status.HTTP_400_BAD_REQUEST)
+
 
 # {"username":"vendor1","email":"vendor1@gmail.com","password":"myPassword","phone_number":"03208519958","user_type":"V"}

@@ -1,5 +1,5 @@
-import React from "react";
-import { Typography } from "@material-ui/core";
+import React from "react"
+import { Typography } from "@material-ui/core"
 
 function Home(props) {
   return (
@@ -8,7 +8,7 @@ function Home(props) {
         Display all products Here
       </Typography>
     </React.Fragment>
-  );
+  )
 }
 
-export default Home;
+export default Home

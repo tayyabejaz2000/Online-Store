@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { TextField, Button, Grid } from "@material-ui/core";
+import { TextField, Button, Grid } from "@material-ui/core"
 import axiosInstance from '../../Axios/axiosAPI'
 
 
@@ -8,12 +8,6 @@ function AddItem(props)
     const [product_name, setProductName] = useState("")
     const [product_description, setProductDescription] = useState("")
     const [quantity,setQuantity] = useState(0)
-    
-    function AddProduct() {
-        axiosInstance.post('/vendor/add-product/'
-
-        )
-    }
 
     return (
         <Grid
@@ -58,7 +52,7 @@ function AddItem(props)
             />
             <Button type="submit" value="Submit">Add Product</Button>
         </Grid>
-	);
+	)
 }
 
 export default AddItem

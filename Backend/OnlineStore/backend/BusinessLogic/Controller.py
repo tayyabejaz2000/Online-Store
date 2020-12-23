@@ -1,55 +1,49 @@
-from rest_framework import status
-from rest_framework.response import Response
-from ..models import UserAccount
 from .Accounts import Accounts, User, Vendor
 
 
 class Store:
+    def __init__(self):
+        self.accounts = Accounts()
+        self.vendors = Vendor()
+        self.users = User()
+
     def login_user(self):
-        return Accounts().login_user()
+        return self.accounts.login_user()
 
-    def create_user(self, request):
-        try:
-            Accounts().create_user(request.data)
-            return Response(request.data, status=status.HTTP_201_CREATED)
-        except Exception as e:
-            return Response(request.data, status=status.HTTP_400_BAD_REQUEST)
+    def create_user(self, user_data):
+        self.accounts.create_user(user_data)
 
-    def logout_user(self, request):
-        try:
-            Accounts().logout_user(request.data["refresh_token"])
-            return Response(request.data, status=status.HTTP_205_RESET_CONTENT)
-        except Exception as e:
-            return Response(request.data, status=status.HTTP_400_BAD_REQUEST)
+    def logout_user(self, token):
+        self.accounts.logout_user(token)
 
-    def addBillingAddress(self, request):
-        try:
-            user = Accounts().getAccount(request.data.id)
-            User().addBillingAddress(user, request.data.address)
-            return Response(request.data, status=status.HTTP_201_CREATED)
-        except Exception as e:
-            return Response(request.data, status=status.HTTP_400_BAD_REQUEST)
+    def addBillingAddress(self, user_id, address):
+        user = self.accounts.getAccount(user_id)
+        self.users.addBillingAddress(user, address)
 
-    def setShop(self, request):
-        try:
-            vendor = Accounts().getAccount(request.data.id)
-            Vendor().setShop(vendor, request.data.shop_name, request.data.shop_location)
-            return Response(request.data, status=status.HTTP_201_CREATED)
-        except Exception as e:
-            return Response(request.data, status=status.HTTP_400_BAD_REQUEST)
+    def setShop(self, vendor_id, shop_name, shop_location):
+        vendor = self.accounts.getAccount(vendor_id)
+        self.vendors.setShop(vendor, shop_name, shop_location)
 
-    def addProduct(self, request):
-        try:
-            vendor = Accounts().getAccount(request.data.id)
-            Vendor().addProduct(vendor.shop, request.data.product_name,
-                                request.data.product_desc, request.data.quantity)
-            return Response(request.data, status=status.HTTP_201_CREATED)
-        except Exception as e:
-            return Response(request.data, status=status.HTTP_400_BAD_REQUEST)
+    def addProduct(self, vendor_id, product_name, product_desc, quantity):
+        vendor = self.accounts.getAccount(vendor_id)
+        shop = vendor.shop
+        self.vendors.addProduct(shop, product_name,
+                                product_desc, quantity)
 
-    def removeProduct(self, request):
-        try:
-            Vendor().removeProduct(request.data.product_id)
-            return Response(request.data, status=status.HTTP_205_RESET_CONTENT)
-        except Exception as e:
-            return Response(request.data, status=status.HTTP_400_BAD_REQUEST)
+    def removeProduct(self, product_id):
+        self.vendors.removeProduct(product_id)
+
+    def getAllProducts(self):
+        returnVal = {
+            "Products": [
+                [{
+                    "name": "hello",
+                }],
+                [{
+                    "name": "hello",
+                }],
+                [{
+                    "name": "hello",
+                }]
+            ]
+        }

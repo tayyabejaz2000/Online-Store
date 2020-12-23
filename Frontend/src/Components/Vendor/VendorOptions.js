@@ -1,24 +1,24 @@
 import React , {useState} from 'react'
-import Button from '@material-ui/core/Button';
-import Modal from '@material-ui/core/Modal';
+import Button from '@material-ui/core/Button'
+import Modal from '@material-ui/core/Modal'
 
-import AddItem from "./AddItem";
-import RemoveItem from "./RemoveItem";
+import AddItem from "./AddItem"
+import RemoveItem from "./RemoveItem"
 
 function VendorOptions(props)
 {
-	const [ addItemModal , setaddItemModal] = useState(false);
-	const [ removeItemModal , setRemoveModal] = useState(false);
+	const [ addItemModal , setaddItemModal] = useState(false)
+	const [ removeItemModal , setRemoveModal] = useState(false)
 
 	return(
 		<React.Fragment>
 			<Button onClick={() => setaddItemModal(true)}>Add Item</Button>
-            <Button onClick={() => setRemoveModal(true) }>Delete Item</Button>
+            <Button onClick={() => setRemoveModal(true)}>Delete Item</Button>
 
 		<Modal
 			open={addItemModal}
 			onClose={()=> setaddItemModal(false)}
-			color="inherit"
+			color="primary"
         >
 			<AddItem/>
     		<Button onClick={() => setaddItemModal(false) }>Cancel Placement</Button>
@@ -27,7 +27,7 @@ function VendorOptions(props)
 		<Modal
 			open={removeItemModal}
 			onClose={() => setRemoveModal(false)}
-			color="inherit"
+			color="primary"
         >
 			<RemoveItem/>
     		<Button onClick={() => setRemoveModal(false) }>Done</Button>

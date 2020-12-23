@@ -1,11 +1,7 @@
 import {
 	createMuiTheme,
 } from '@material-ui/core/styles'
-
-const LightTheme = createMuiTheme({
-	palette: {
-		type:'light',
-	}
-})
+import data from './lightTheme.json'
+const LightTheme = createMuiTheme(data)
 
 export default LightTheme

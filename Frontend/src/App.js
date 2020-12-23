@@ -1,50 +1,54 @@
-import React, { useState } from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { ThemeProvider } from "@material-ui/core/styles";
-import CssBaseline from "@material-ui/core/CssBaseline";
-//Components
-import Header from "./Components/Header";
-import Footer from "./Components/Footer";
+import React, { useState } from "react"
+import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom"
+import { ThemeProvider } from "@material-ui/core/styles"
+import CssBaseline from "@material-ui/core/CssBaseline"
 
-//Routes
-import Home from "./Views/Home";
+//Components
+import Header from "./Components/Header"
+import Footer from "./Components/Footer"
+
+//Routes-Views
+import Home from "./Views/Home"
+import Login from "./Views/Login"
+import Vendor from "./Views/Vendor"
+import Signup from "./Views/Signup"
 
 //Themes
-import DarkTheme from "./Themes/darkTheme";
-import LightTheme from "./Themes/lightTheme";
+import DarkTheme from "./Themes/darkTheme"
+import LightTheme from "./Themes/lightTheme"
 
-import Login from "./Components/Login";
-
-//Vendor Components
-import VendorOptions from "./Components/Vendor/VendorOptions";
-
-function App() {
-	const [dark_theme, changeThemePreference] = useState(true);
-	let theme = dark_theme ? DarkTheme : LightTheme;
-	function getTheme() {
-		return [dark_theme, changeThemePreference];
-	}
-
+function App(props) {
+	const [dark_theme, changeThemePreference] = useState(true)
+	console.log(DarkTheme)
 	return (
-		<ThemeProvider theme={theme}>
+		<ThemeProvider theme={dark_theme ? DarkTheme : LightTheme}>
 			<CssBaseline />
 			<Router>
-				<Header themeState={getTheme} />
+				<Header theme={dark_theme} onThemeChange={changeThemePreference}/>
 				<Switch>
-					<Route exact path = "/">
+					<Route exact path="/home">
 						<Home />
 					</Route>
 					<Route exact path="/login">
 						<Login />
 					</Route>
+					<Route exact path="/signup">
+						<Signup />
+					</Route>
 					<Route exact path="/vendor">
-						<VendorOptions />
+						<Vendor />
+					</Route>
+					<Route exact path="/user">
+						{null}
+					</Route>
+					<Route path="/">
+						<Redirect to="/home"/>
 					</Route>
 				</Switch>
 				<Footer />
 			</Router>
 		</ThemeProvider>
-  );
+  )
 }
 
-export default App;
+export default App
