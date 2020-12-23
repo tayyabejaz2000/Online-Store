@@ -52,3 +52,5 @@ class CartProducts(models.Model):
 
     class Meta:
         unique_together = ('cart', 'product')
+
+# Rest tables
