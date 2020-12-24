@@ -17,7 +17,7 @@ function UserProductCard(props) {
 		>
 			<Grid item>
 				<Tooltip title="Add to Cart">
-					<Fab variant="extended">
+					<Fab variant="extended" onClick={null}>
 						<AddShoppingCartIcon />
 						Add to Cart
 					</Fab>

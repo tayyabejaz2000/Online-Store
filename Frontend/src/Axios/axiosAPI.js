@@ -27,7 +27,7 @@ axiosInstance.interceptors.response.use(
 		if (error.response.data.code === "token_not_valid" &&
 			error.response.status === 401 && 
 			error.response.statusText === "Unauthorized")
-			{
+		{
 				const refreshToken = localStorage.getItem('refresh_token')
 
 				if (refreshToken) {
@@ -44,6 +44,9 @@ axiosInstance.interceptors.response.use(
 			
 							localStorage.setItem('access_token', response.data.access)
 							localStorage.setItem('refresh_token', response.data.refresh)
+
+							sessionStorage.setItem('username', response.data.username)
+							sessionStorage.setItem('accountType', response.data.accountType)
 			
 							axiosInstance.defaults.headers['Authorization'] = "JWT " + response.data.access
 							originalRequest.headers['Authorization'] = "JWT " + response.data.access

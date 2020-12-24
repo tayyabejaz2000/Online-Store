@@ -7,7 +7,7 @@ class ObtainTokenSerializer(TokenObtainPairSerializer):
     def get_token(cls, user, format='json'):
         token = super().get_token(user)
         token['username'] = user.username
-        token['account-type'] = user.user_type
+        token['accountType'] = user.user_type
         return token
 
 

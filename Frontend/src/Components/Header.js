@@ -47,7 +47,7 @@ function Header(props)
 					<IconButton aria-label="themeIcon" onClick={() => {props.onThemeChange(!props.theme)}}>
 						{themeIcon}
 					</IconButton>
-					<IconButton aria-label="account">
+					<IconButton aria-label="account" onClick={() => {window.location.href="/account"}}>
 						<AccountCircleIcon />
 					</IconButton>
 				</Toolbar>

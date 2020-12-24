@@ -45,6 +45,7 @@ export default function Vendor(props) {
 				<Grid item>
 					<VendorProductCard productName="Product 6" category="Baby Products" price="$20.95" quantity="1200" />
 				</Grid>
+				
 				<Grid container item justify="center">
 					<Tooltip title="Add Product">
 						<Fab variant="extended">

@@ -16,6 +16,7 @@ import Signup from "./Views/Signup"
 //Themes
 import DarkTheme from "./Themes/darkTheme"
 import LightTheme from "./Themes/lightTheme"
+import MyAccount from "./Views/MyAccount"
 
 function App(props) {
 	const [dark_theme, changeThemePreference] = useState(true)
@@ -37,6 +38,9 @@ function App(props) {
 					</Route>
 					<Route exact path="/vendor">
 						<Vendor />
+					</Route>
+					<Route exact path="/account">
+						<MyAccount />
 					</Route>
 					<Route exact path="/user">
 						{null}
