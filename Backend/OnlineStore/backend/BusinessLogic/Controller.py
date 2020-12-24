@@ -33,17 +33,21 @@ class Store:
     def removeProduct(self, product_id):
         self.vendors.removeProduct(product_id)
 
+    # Adan Work
+
     def getAllProducts(self):
+        products = self.vendors.getAllProducts()
+
         returnVal = {
-            "Products": [
-                [{
-                    "name": "hello",
-                }],
-                [{
-                    "name": "hello",
-                }],
-                [{
-                    "name": "hello",
-                }]
-            ]
+            "Products": products
         }
+        return returnVal
+
+    def updateProduct(self, product_id, vendor_id, product_name, product_desc, quantity):
+        vendor = self.accounts.getAccount(vendor_id)
+        shop = vendor.shop
+        self.vendors.updateProduct(
+            product_id, shop, product_name, product_desc, quantity)
+
+    def addProductToCart(self, product_id, user_id):
+        self.users.addProductToCart(product_id=product_id, user_id=user_id)

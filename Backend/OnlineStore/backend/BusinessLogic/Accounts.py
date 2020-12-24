@@ -1,6 +1,6 @@
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from .tokenHandler import ObtainToken
-from ..models import BillingAddress, Product, Shop, UserAccount
+from ..models import BillingAddress, Product, Shop, UserAccount, Cart
 from ..serializers import AccountsSerializer
 
 
@@ -42,6 +42,19 @@ class User:
             raise Exception("Couldn't add address for User, [Address]:" +
                             str(address))
 
+    # Adan Start
+
+    def addProductToCart(self, product_id, user_id):
+        try:
+            cart = Cart.objects.get(user=user_id)
+            product = Product.objects.get(id=product_id)
+            cart.products.add(product)
+        except Exception:
+            raise Exception("Unable to add Product to Cart, [Product]: " +
+                            str(product))
+
+    # Adan End
+
 
 class Vendor:
     def setShop(self, vendor, shop_name, shop_location):
@@ -69,3 +82,18 @@ class Vendor:
         except:
             raise Exception("Couldn't delete Product: [Product ID]:" +
                             str(product_id))
+
+    # Adan Work
+    def getAllProducts(self):
+        products = Product.objects.all()
+        return products
+
+    def updateProduct(self, product_id,  shop, product_name, product_desc, product_quantity):
+        try:
+            product = Product(id=product_id, name=product_name, description=product_desc,
+                              quantity=product_quantity, shop=shop)
+            product.save()
+        except:
+            raise Exception("Couldn't update Product for Shop, [Product Name]:" + str(product_name) +
+                            ", [Product Description]:" + str(product_desc) + ", [Quantity]:" + str(quantity))
+    # confirm from Tayyab about shop changing
