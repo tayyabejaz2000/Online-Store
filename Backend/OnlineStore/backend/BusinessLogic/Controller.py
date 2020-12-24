@@ -16,6 +16,13 @@ class Store:
     def logout_user(self, token):
         self.accounts.logout_user(token)
 
+    def getUserData(self, user_id):
+        user = self.accounts.getAccount(user_id)
+        return {
+            "username": user.username,
+            "accountType": user.user_type,
+        }
+
     def addBillingAddress(self, user_id, address):
         user = self.accounts.getAccount(user_id)
         self.users.addBillingAddress(user, address)
@@ -26,8 +33,7 @@ class Store:
 
     def addProduct(self, vendor_id, product_name, product_desc, quantity):
         vendor = self.accounts.getAccount(vendor_id)
-        shop = vendor.shop
-        self.vendors.addProduct(shop, product_name,
+        self.vendors.addProduct(vendor.shop, product_name,
                                 product_desc, quantity)
 
     def removeProduct(self, product_id):
@@ -37,17 +43,12 @@ class Store:
 
     def getAllProducts(self):
         products = self.vendors.getAllProducts()
+        return {"products": products}
 
-        returnVal = {
-            "Products": products
-        }
-        return returnVal
-
-    def updateProduct(self, product_id, vendor_id, product_name, product_desc, quantity):
-        vendor = self.accounts.getAccount(vendor_id)
-        shop = vendor.shop
+    def updateProduct(self, product_id, product_name, product_desc, quantity):
         self.vendors.updateProduct(
-            product_id, shop, product_name, product_desc, quantity)
+            product_id, product_name, product_desc, quantity)
 
-    def addProductToCart(self, product_id, user_id):
-        self.users.addProductToCart(product_id=product_id, user_id=user_id)
+    def addProductToCart(self, user_id, product_id, quantity):
+        user = self.accounts.getAccount(user_id)
+        self.users.addProductToCart(user, product_id, quantity)

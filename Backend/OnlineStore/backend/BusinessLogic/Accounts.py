@@ -1,6 +1,7 @@
+from django.http.response import HttpResponse
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from .tokenHandler import ObtainToken
-from ..models import BillingAddress, Product, Shop, UserAccount, Cart
+from ..models import BillingAddress, CartProducts, Product, Shop, UserAccount, Cart
 from ..serializers import AccountsSerializer
 
 
@@ -14,6 +15,8 @@ class Accounts:
             user = serializer.save()
             if user:
                 user.save()
+                user_cart = Cart(user=user)
+                user_cart.save()
                 return None
         raise Exception("Couldn't Create User with data: " + str(user_data))
 
@@ -24,7 +27,7 @@ class Accounts:
         except TokenError as e:
             raise Exception("Invalid Token, [Refresh Token]:" +
                             str(refresh_token) + ", [Exception]:" + str(e))
-        except Exception as e:
+        except:
             raise Exception("Couldn't Logout User, [Refresh Token]:" +
                             str(refresh_token))
 
@@ -33,25 +36,27 @@ class Accounts:
 
 
 class User:
-    def addBillingAddress(self, user, address):
+    def addBillingAddress(self, user, billingAddress):
         try:
             address = BillingAddress(user=user,
-                                     billingAddress=address)
+                                     billingAddress=billingAddress)
             address.save()
-        except Exception as e:
+        except:
             raise Exception("Couldn't add address for User, [Address]:" +
-                            str(address))
+                            str(billingAddress))
 
     # Adan Start
 
-    def addProductToCart(self, product_id, user_id):
+    def addProductToCart(self, user, product_id, quantity):
         try:
-            cart = Cart.objects.get(user=user_id)
+            cart = Cart.objects.get(user=user)
             product = Product.objects.get(id=product_id)
-            cart.products.add(product)
-        except Exception:
-            raise Exception("Unable to add Product to Cart, [Product]: " +
-                            str(product))
+            CartEntry = CartProducts(
+                cart=cart, product=product, quantity=quantity)
+            CartEntry.save()
+        except:
+            raise Exception("Unable to add Product to Cart, [Product_ID]: " +
+                            str(product_id))
 
     # Adan End
 
@@ -69,7 +74,7 @@ class Vendor:
     def addProduct(self, shop, product_name, product_desc, quantity):
         try:
             product = Product(name=product_name, description=product_desc,
-                              quantity=quantity, shop=shop)
+                              stock=quantity, shop=shop)
             product.save()
         except:
             raise Exception("Couldn't add Product for Shop, [Product Name]:" + str(product_name) +
@@ -85,15 +90,16 @@ class Vendor:
 
     # Adan Work
     def getAllProducts(self):
-        products = Product.objects.all()
+        products = list(Product.objects.all().values())
         return products
 
-    def updateProduct(self, product_id,  shop, product_name, product_desc, product_quantity):
+    def updateProduct(self, product_id, product_name, product_desc, product_quantity):
         try:
-            product = Product(id=product_id, name=product_name, description=product_desc,
-                              quantity=product_quantity, shop=shop)
+            product = Product.objects.get(pk=product_id)
+            product.name = product_name
+            product.description = product_desc
+            product.stock = product_quantity
             product.save()
         except:
             raise Exception("Couldn't update Product for Shop, [Product Name]:" + str(product_name) +
-                            ", [Product Description]:" + str(product_desc) + ", [Quantity]:" + str(quantity))
-    # confirm from Tayyab about shop changing
+                            ", [Product Description]:" + str(product_desc) + ", [Quantity]:" + str(product_quantity))

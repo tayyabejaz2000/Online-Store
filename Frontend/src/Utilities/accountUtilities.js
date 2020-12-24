@@ -15,12 +15,7 @@ export function login(values) {
 		if (values.rememberMe)
 			localStorage.setItem('refresh_token', result.data.refresh)
 		if (result.status === 200) {
-			sessionStorage.setItem("username", values.username)
-			sessionStorage.setItem("accountType", result.data.accountType)
 			window.location.href = "/home"
-/*			if (result.data.accountType === "Vendor")
-			else if (result.data.accountType === "User")
-				window.location.href = "/vendor"*/
 		}
 	})
 	.catch((error) => {
@@ -33,13 +28,14 @@ export function signup(values) {
 	// Do Signup
 }
 
-export function getUsername() {
+export function getAccountData() {
 	let username = sessionStorage.getItem("username")
+	let account = sessionStorage.getItem("")
 	if (username) {
 		return username
 	}
 	else {
-		//Do Post Query from Refresh Token, save Access Token, username and accountType
+		
 	}
 }
 

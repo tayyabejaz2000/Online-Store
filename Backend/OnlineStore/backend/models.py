@@ -38,7 +38,8 @@ class Product(models.Model):
 
 
 class Cart(models.Model):
-    user = models.OneToOneField(UserAccount, on_delete=models.CASCADE)
+    user = models.OneToOneField(
+        UserAccount, on_delete=models.CASCADE, limit_choices_to={'user_type': 'U'})
     products = models.ManyToManyField(
         Product, through='CartProducts', through_fields=('cart', 'product',))
 

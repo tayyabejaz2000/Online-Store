@@ -1,7 +1,5 @@
-from django.db.models import fields
 from rest_framework import serializers
-from rest_framework.utils import field_mapping
-from .models import BillingAddress, Product, Shop, UserAccount, Cart
+from .models import UserAccount
 
 
 class AccountsSerializer(serializers.ModelSerializer):

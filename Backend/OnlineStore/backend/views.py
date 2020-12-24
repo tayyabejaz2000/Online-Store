@@ -1,3 +1,4 @@
+from datetime import date
 from rest_framework import permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -35,6 +36,19 @@ class Logout(APIView):
             return Response(status=status.HTTP_205_RESET_CONTENT)
         except Exception as e:
             print("Exception Thrown: ", e)  # Log error
+            return Response(data=str(e), status=status.HTTP_400_BAD_REQUEST)
+
+
+class GetUserData(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    authentication_classes = ()
+
+    def post(self, request):
+        try:
+            userdata = controller.getUserData(request.data.id)
+            return Response(data=userdata, status=status.HTTP_200_OK)
+        except Exception as e:
+            print("Exception Throw: ", e)  # Log Error
             return Response(data=str(e), status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -92,4 +106,42 @@ class RemoveProduct(APIView):
             return Response(data=str(e), status=status.HTTP_400_BAD_REQUEST)
 
 
-# {"username":"vendor1","email":"vendor1@gmail.com","password":"myPassword","phone_number":"03208519958","user_type":"V"}
+class GetAllProducts(APIView):
+    permission_classes = (permissions.AllowAny,)
+    authentication_classes = ()
+
+    def post(self, request):
+        try:
+            products = controller.getAllProducts()
+            return Response(data=products,  status=status.HTTP_200_OK)
+        except Exception as e:
+            print("Exception Thrown", e)  # Log Error
+            return Response(data=str(e), status=status.HTTP_400_BAD_REQUEST)
+
+
+class UpdateProduct(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    authentication_classes = ()
+
+    def post(self, request):
+        try:
+            controller.updateProduct(request.data.product_id, request.data.product_name,
+                                     request.data.product_desc, request.data.quantity)
+            return Response(status=status.HTTP_200_OK)
+        except Exception as e:
+            print("Exception Thrown", e)  # Log Error
+            return Response(data=str(e), status=status.HTTP_400_BAD_REQUEST)
+
+
+class AddProductToCart(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    authentication_classes = ()
+
+    def post(self, request):
+        try:
+            controller.addProductToCart(
+                request.data.id, request.data.product_id, request.data.quantity)
+            return Response(status=status.HTTP_201_CREATED)
+        except Exception as e:
+            print("Exception Thrown", e)  # Log Error
+            return Response(data=str(e), status=status.HTTP_400_BAD_REQUEST)
