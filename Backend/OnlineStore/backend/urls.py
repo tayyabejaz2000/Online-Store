@@ -16,7 +16,7 @@ urlpatterns = [
 
     path('products/', GetAllProducts.as_view()),
 
-    path('account/data', GetUserData.as_view()),
+    path('account/min-data', GetUserData.as_view()),
 
     path('user/add-to-cart', AddProductToCart.as_view()),
     path('user/add-billing-address', AddBillingAddress.as_view()),

@@ -31,8 +31,11 @@ export function signup(values) {
 export function getAccountData() {
 	let username = sessionStorage.getItem("username")
 	let account = sessionStorage.getItem("")
-	if (username) {
-		return username
+	if (username && account) {
+		return {
+			"username": username,
+			"account": account,
+		}
 	}
 	else {
 		
