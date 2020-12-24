@@ -20,7 +20,6 @@ export function login(values) {
 	})
 	.catch((error) => {
 		console.log(error)
-		//Show Error that login Failed Try Again.
 	})
 }
 
@@ -30,24 +29,23 @@ export function signup(values) {
 
 export function getAccountData() {
 	let username = sessionStorage.getItem("username")
-	let account = sessionStorage.getItem("")
-	if (username && account) {
+	let accountType = sessionStorage.getItem("accountType")
+	if (username && accountType) {
 		return {
 			"username": username,
-			"account": account,
+			"accountType": accountType,
 		}
 	}
 	else {
-		
-	}
-}
-
-export function getAccountType() {
-	let accountType = sessionStorage.getItem("accountType")
-	if (accountType) {
-		return accountType
-	}
-	else {
-		//Do Post Query from Refresh Token, save Access Token, username and accountType
+		axiosInstance.get("/account/min-data/")
+		.then((result) => {
+			if (result.status === 200) {
+				sessionStorage.setItem("username", result.data.username)
+				sessionStorage.setItem("accountType", result.data.accountType)
+			}
+		})
+		.catch((error) => {
+			console.log(error)
+		})
 	}
 }

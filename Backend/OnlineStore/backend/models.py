@@ -30,11 +30,17 @@ class Shop(models.Model):
     location = models.CharField(max_length=200)
 
 
+class Category(models.Model):
+    name = models.CharField(max_length=20, primary_key=True)
+
+
 class Product(models.Model):
     name = models.CharField(max_length=50)
     description = models.TextField()
     stock = models.IntegerField()
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE, null=False)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    isRemoved = models.BooleanField(default=False)
 
 
 class Cart(models.Model):
@@ -53,5 +59,3 @@ class CartProducts(models.Model):
 
     class Meta:
         unique_together = ('cart', 'product')
-
-# Rest tables

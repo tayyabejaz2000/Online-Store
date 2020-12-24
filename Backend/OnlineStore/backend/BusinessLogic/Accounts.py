@@ -1,7 +1,7 @@
 from django.http.response import HttpResponse
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from .tokenHandler import ObtainToken
-from ..models import BillingAddress, CartProducts, Product, Shop, UserAccount, Cart
+from ..models import BillingAddress, CartProducts, Category, Product, Shop, UserAccount, Cart
 from ..serializers import AccountsSerializer
 
 
@@ -71,10 +71,11 @@ class Vendor:
             raise Exception("Couldn't add Shop for Vendor, [Shop Name]:" +
                             str(shop_name) + ", [Shop Location]:" + str(shop_location))
 
-    def addProduct(self, shop, product_name, product_desc, quantity):
+    def addProduct(self, shop, product_name, product_desc, quantity, category):
         try:
+            _category = Category.objects.get(name=category)
             product = Product(name=product_name, description=product_desc,
-                              stock=quantity, shop=shop)
+                              stock=quantity, shop=shop, category=_category)
             product.save()
         except:
             raise Exception("Couldn't add Product for Shop, [Product Name]:" + str(product_name) +
@@ -83,22 +84,25 @@ class Vendor:
     def removeProduct(self, product_id):
         try:
             product = Product.objects.get(id=product_id)
-            product.delete()
+            product.isRemoved = True
+            product.save()
         except:
             raise Exception("Couldn't delete Product: [Product ID]:" +
                             str(product_id))
 
     # Adan Work
     def getAllProducts(self):
-        products = list(Product.objects.all().values())
+        products = list(Product.objects.filter(isRemoved=False))
         return products
 
-    def updateProduct(self, product_id, product_name, product_desc, product_quantity):
+    def updateProduct(self, product_id, product_name, product_desc, product_quantity, category):
         try:
+            _category = Category.objects.get(name=category)
             product = Product.objects.get(pk=product_id)
             product.name = product_name
             product.description = product_desc
             product.stock = product_quantity
+            product.category = _category
             product.save()
         except:
             raise Exception("Couldn't update Product for Shop, [Product Name]:" + str(product_name) +

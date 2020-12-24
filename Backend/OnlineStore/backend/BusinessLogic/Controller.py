@@ -31,10 +31,10 @@ class Store:
         vendor = self.accounts.getAccount(vendor_id)
         self.vendors.setShop(vendor, shop_name, shop_location)
 
-    def addProduct(self, vendor_id, product_name, product_desc, quantity):
+    def addProduct(self, vendor_id, product_name, product_desc, quantity, category):
         vendor = self.accounts.getAccount(vendor_id)
         self.vendors.addProduct(vendor.shop, product_name,
-                                product_desc, quantity)
+                                product_desc, quantity, category)
 
     def removeProduct(self, product_id):
         self.vendors.removeProduct(product_id)
@@ -45,9 +45,9 @@ class Store:
         products = self.vendors.getAllProducts()
         return {"products": products}
 
-    def updateProduct(self, product_id, product_name, product_desc, quantity):
+    def updateProduct(self, product_id, product_name, product_desc, quantity, category):
         self.vendors.updateProduct(
-            product_id, product_name, product_desc, quantity)
+            product_id, product_name, product_desc, quantity, category)
 
     def addProductToCart(self, user_id, product_id, quantity):
         user = self.accounts.getAccount(user_id)
