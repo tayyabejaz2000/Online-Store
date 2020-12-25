@@ -40,8 +40,3 @@ class user:
         wallet = self.account.wallet
         wallet.balance -= balance
         wallet.save()
-
-    def addComplaint(self, complaint_body):
-        complaint = Complaint(complaint_body=complaint_body,
-                              account=self.account)
-        complaint.save()

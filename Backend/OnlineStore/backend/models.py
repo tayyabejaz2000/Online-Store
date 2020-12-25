@@ -68,6 +68,10 @@ class Cart(models.Model):
     products = models.ManyToManyField(Product, through='CartProduct',
                                       through_fields=('cart', 'product',))
 
+    @property
+    def netTotal(self):
+        return self.products.
+
 
 class CartProduct(models.Model):
     cart = models.ForeignKey(

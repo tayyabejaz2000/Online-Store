@@ -3,6 +3,7 @@ from .accounts import accounts
 from .products import products
 from .user import user
 from .vendor import vendor
+from .orders import orders
 
 
 class Store:
@@ -10,6 +11,7 @@ class Store:
         self.accounts = accounts()
         self.products = products()
         self.complaints = complaints()
+        self.orders = orders()
 
     # accounts.py functions
 
@@ -40,7 +42,7 @@ class Store:
         account = self.accounts.getAccount(account_id)
         User = user(account)
         cart = User.getCart()
-        return cart  # confirm return
+        return cart
 
     def addProductToCart(self, account_id, product_id, quantity):
         account = self.accounts.getAccount(account_id)
@@ -63,11 +65,6 @@ class Store:
             User.removeBalance(balance=balance)
         else:
             raise Exception("Invalid Wallet Password!")
-
-    def addComplaint(self, account_id, complaint_body):
-        account = self.accounts.getAccount(account_id)
-        User = user(account)
-        User.addComplaint(complaint_body)
 
     # vendor.py functions
 
@@ -105,3 +102,23 @@ class Store:
         account = self.accounts.getAccount(account_id)
         product = self.products.getProduct(product_id)
         self.products.addReview(account, product, stars, feedback)
+
+    # complaints.py
+    def addComplaint(self, account_id, complaint_body):
+        account = self.accounts.getAccount(account_id)
+        self.complaints.addComplaint(account, complaint_body)
+
+    def getAllComplaints(self):
+        return self.complaints.getAllComplaints()
+
+    def resolveComplaint(self, complaint_id, account_id, response):
+        account = self.accounts.getAccount(account_id)
+        self.complaints.resolveComplaint(complaint_id, account, response)
+
+    # orders.py
+
+    # Controller Functions
+
+    def getComplaints(self, account_id):
+        account = self.accounts.getAccount(account_id)
+        return account.complaints
