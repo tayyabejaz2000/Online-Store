@@ -12,4 +12,5 @@ class orders:
             op = OrderedProduct(
                 product=i.product, quantity=i.quantity, order=order, shipping=shipping)
             order.ordered_products.product = i.product
-            net += i.product.p
+            net += i.product.price
+            op.save()
