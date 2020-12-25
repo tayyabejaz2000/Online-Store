@@ -1,4 +1,3 @@
-from datetime import date
 from rest_framework import permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -9,7 +8,7 @@ controller = Store()
 
 
 class Login:
-    def as_view(self):
+    def as_view():
         return controller.login_user()
 
 
@@ -65,14 +64,14 @@ class AddBillingAddress(APIView):
             return Response(data=str(e), status=status.HTTP_400_BAD_REQUEST)
 
 
-class SetShop(APIView):
+class EditShop(APIView):
     permission_classes = (permissions.IsAuthenticated,)
     authentication_classes = ()
 
     def post(self, request):
         try:
-            controller.setShop(request.data.id, request.data.shop_name,
-                               request.data.shop_location)
+            controller.editShop(request.data.id, request.data.shop_name,
+                                request.data.shop_location)
             return Response(status=status.HTTP_201_CREATED)
         except Exception as e:
             print("Exception Thrown: ", e)  # Log error
