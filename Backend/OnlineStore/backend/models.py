@@ -54,6 +54,7 @@ class Product(models.Model):
     name = models.CharField(max_length=50)
     description = models.TextField()
     stock = models.PositiveIntegerField(default=0)
+    price = models.PositiveIntegerField(default=0)
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE,
                              null=False, related_name='products')
     category = models.ForeignKey(
