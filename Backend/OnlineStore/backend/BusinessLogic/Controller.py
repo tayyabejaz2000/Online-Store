@@ -38,8 +38,9 @@ class Store:
     def addProduct(self, account_id, product_name, product_desc, quantity, category, price):
         account = self.accounts.getAccount(account_id)
         Vendor = vendor(account)
+        shop = Vendor.getShop()
         self.products.addProduct(product_name, product_desc, quantity,
-                                 category, Vendor.getShop())
+                                 category, shop, price)
 
     def removeProduct(self, product_id):
         self.products.removeProduct(product_id)
