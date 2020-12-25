@@ -30,7 +30,7 @@ class Wallet(models.Model):
     user = models.OneToOneField(UserAccount, on_delete=models.CASCADE,
                                 limit_choices_to={'user_type': ['U', 'V']}, related_name='wallet')
     balance = models.PositiveIntegerField(default=0)
-    wallet_password = models.CharField(max_length=128)
+    wallet_password = models.CharField(max_length=128, null=True, default=None)
 
     def set_password(self, password: str):
         self.wallet_password = make_password(password)

@@ -1,6 +1,6 @@
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from .tokenHandler import ObtainToken
-from ..models import Shop, UserAccount, Cart
+from ..models import Shop, UserAccount, Cart, Wallet
 from ..serializers import AccountsSerializer
 
 
@@ -23,6 +23,10 @@ class accounts:
                         shop = Shop(vendor=user, shop_name=user_data.shop_name,
                                     location=user_data.shop_location)
                         shop.save()
+                    if (user.user_type == 'U' or user.user_type == 'V'):
+                        wallet = Wallet(user=user)
+                        wallet.set_password(user_data.wallet_password)
+                        wallet.save()
                     return None
                 except:
                     raise Exception("Couldn't Create User with data: " +
