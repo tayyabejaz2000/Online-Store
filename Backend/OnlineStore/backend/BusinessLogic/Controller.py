@@ -1,3 +1,4 @@
+from Backend.OnlineStore.backend.BusinessLogic.complaints import complaints
 from .accounts import accounts
 from .products import products
 from .user import user
@@ -8,6 +9,7 @@ class Store:
     def __init__(self):
         self.accounts = accounts()
         self.products = products()
+        self.complaints = complaints()
 
     def login_user(self):
         return self.accounts.login_user()

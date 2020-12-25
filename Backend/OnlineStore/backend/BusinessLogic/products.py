@@ -1,5 +1,5 @@
 from .reviews import reviews
-from ..models import Category, Product, Review
+from ..models import Category, Product
 
 
 class products:
