@@ -1,13 +1,16 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.core.validators import MaxValueValidator
+from django.contrib.auth.hashers import make_password, check_password
 
 
 class UserAccount(AbstractUser):
     phone_number = models.CharField(max_length=12, null=True)
     user_type = models.CharField(max_length=2, default='U', null=False, choices=[
-        ('V', 'Vendor'),
-        ('U', 'User'),
-        ('A', 'Admin'),
+        ('V', 'Vendor'),  # Normal Vendor
+        ('U', 'User'),  # Normal User
+        ('E', 'Employee'),  # Employee working in Store, can solve complaints
+        ('A', 'Admin'),  # Admins can add/remove any account(employee, vendor, user)
     ])
 
     class Meta:
@@ -21,6 +24,19 @@ class BillingAddress(models.Model):
     user = models.ForeignKey(UserAccount, on_delete=models.CASCADE,
                              limit_choices_to={'user_type': 'U'}, related_name='billing_addresses')
     billingAddress = models.CharField(max_length=512, null=False)
+
+
+class Wallet(models.Model):
+    user = models.OneToOneField(UserAccount, on_delete=models.CASCADE,
+                                limit_choices_to={'user_type': ['U', 'V']}, related_name='wallet')
+    balance = models.PositiveIntegerField(default=0)
+    wallet_password = models.CharField(max_length=128)
+
+    def set_password(self, password: str):
+        self.wallet_password = make_password(password)
+
+    def check_password(self, password: str):
+        return check_password(password, self.wallet_password)
 
 
 class Shop(models.Model):
@@ -37,7 +53,7 @@ class Category(models.Model):
 class Product(models.Model):
     name = models.CharField(max_length=50)
     description = models.TextField()
-    stock = models.IntegerField()
+    stock = models.PositiveIntegerField(default=0)
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE,
                              null=False, related_name='products')
     category = models.ForeignKey(
@@ -63,12 +79,35 @@ class CartProduct(models.Model):
         unique_together = ('cart', 'product')
 
 
+class Invoice(models.Model):
+    net = models.PositiveIntegerField()
+    discount = models.PositiveIntegerField(default=0,
+                                           validators=[MaxValueValidator(100)])
+
+    @property
+    def total(self):
+        return self.net - (self.net * (self.discount/100))
+
+
 class Order(models.Model):
     account = models.ForeignKey(UserAccount, on_delete=models.CASCADE,
                                 limit_choices_to={'user_type': 'U'}, related_name='orders')
     created_on = models.DateTimeField(auto_now_add=True)
+    invoice = models.OneToOneField(
+        Invoice, on_delete=models.CASCADE, related_name='order')
     ordered_products = models.ManyToManyField(Product, through='OrderedProduct',
                                               through_fields=('order', 'product', ))
+
+
+class Shipping(models.Model):
+    status = models.CharField(max_length=2, default='P', null=False, choices=[
+        ('P', 'Placed'),
+        ('S', 'Shipped'),
+        ('C', 'Completed'),
+        ('R', 'Returned'),
+    ])
+    address = models.ForeignKey(BillingAddress, on_delete=models.CASCADE,
+                                related_name='shippings')
 
 
 class OrderedProduct(models.Model):
@@ -78,5 +117,24 @@ class OrderedProduct(models.Model):
                                 related_name='orders')
     quantity = models.IntegerField(null=False, default=1)
 
+    shipping = models.OneToOneField(Shipping, on_delete=models.CASCADE,
+                                    related_name='OrderedProduct')
+
     class Meta:
         unique_together = ('order', 'product')
+
+
+class Complaint(models.Model):
+    complaint_body = models.CharField(max_length=512)
+    answer_body = models.CharField(max_length=512, null=True, default=None)
+    account = models.ForeignKey(UserAccount, on_delete=models.CASCADE,
+                                limit_choices_to={'user_type': ['U', 'V']}, related_name='complaints')
+    lookup_employee = models.ForeignKey(UserAccount, on_delete=models.CASCADE, null=True, default=None,
+                                        limit_choices_to={'user_type': 'E'}, related_name='lookup_complaints')
+
+
+class Review(models.Model):
+    stars = models.PositiveIntegerField(default=0,
+                                        validators=[MaxValueValidator(5)])
+    feedback = models.CharField(max_length=512)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)

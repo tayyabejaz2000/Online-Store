@@ -1,4 +1,7 @@
-from .Accounts import accounts, products, user, vendor
+from .accounts import accounts
+from .products import products
+from .user import user
+from .vendor import vendor
 
 
 class Store:
