@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MaxValueValidator
 from django.contrib.auth.hashers import make_password, check_password
+from django.db.models.aggregates import Sum
 
 
 class UserAccount(AbstractUser):
@@ -25,10 +26,13 @@ class BillingAddress(models.Model):
                              limit_choices_to={'user_type': 'U'}, related_name='billing_addresses')
     billingAddress = models.CharField(max_length=512, null=False)
 
+    def __str__(self):
+        return self.user.username
+
 
 class Wallet(models.Model):
     user = models.OneToOneField(UserAccount, on_delete=models.CASCADE,
-                                limit_choices_to={'user_type': ['U', 'V']}, related_name='wallet')
+                                limit_choices_to={'user_type': 'U'}, related_name='wallet')
     balance = models.PositiveIntegerField(default=0)
     wallet_password = models.CharField(max_length=128, null=True, default=None)
 
@@ -45,6 +49,9 @@ class Shop(models.Model):
     shop_name = models.CharField(max_length=30)
     location = models.CharField(max_length=200)
 
+    def __str__(self):
+        return self.shop_name + ':' + self.vendor.username
+
 
 class Category(models.Model):
     name = models.CharField(max_length=20, primary_key=True)
@@ -55,30 +62,48 @@ class Product(models.Model):
     description = models.TextField()
     stock = models.PositiveIntegerField(default=0)
     price = models.PositiveIntegerField(default=0)
+    # Add Discount
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE,
                              null=False, related_name='products')
     category = models.ForeignKey(
         Category, on_delete=models.CASCADE, null=False, related_name='products')
     isRemoved = models.BooleanField(default=False)
 
+    def __str__(self):
+        return self.name + ":" + self.category.name
+
 
 class Cart(models.Model):
     user = models.OneToOneField(UserAccount, on_delete=models.CASCADE,
-                                limit_choices_to={'user_type': 'U'}, related_name='cart')
+                                related_name='cart')
     products = models.ManyToManyField(Product, through='CartProduct',
                                       through_fields=('cart', 'product',))
 
+    def __str__(self):
+        return self.user.username
+
+    def empty(self):
+        self.cart_products.all().delete()
+
     @property
     def netTotal(self):
-        return self.products.
+        net = 0
+        for cart_product in self.cart_products.all():
+            # Calculate Discounted Price
+            net += cart_product.quantity * cart_product.product.price
+        return net
 
 
 class CartProduct(models.Model):
     cart = models.ForeignKey(
-        Cart, on_delete=models.CASCADE)
+        Cart, on_delete=models.CASCADE, related_name='cart_products')
     product = models.ForeignKey(
         Product, on_delete=models.CASCADE)
     quantity = models.IntegerField(null=False, default=1)
+
+    @property
+    def price(self):
+        return self.product.price
 
     class Meta:
         unique_together = ('cart', 'product')
@@ -142,5 +167,7 @@ class Review(models.Model):
     stars = models.PositiveIntegerField(default=0,
                                         validators=[MaxValueValidator(5)])
     feedback = models.CharField(max_length=512)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    user = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE,
+                                related_name='reviews')
+    user = models.ForeignKey(UserAccount, on_delete=models.CASCADE,
+                             related_name='reviews')

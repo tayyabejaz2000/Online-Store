@@ -14,7 +14,6 @@ class products:
 
     def addProduct(self, product_name, product_desc, quantity, category, shop, price):
         try:
-
             _category = self.getCategory(category)
             product = Product(name=product_name, description=product_desc,
                               stock=quantity, shop=shop, category=_category, price=price)

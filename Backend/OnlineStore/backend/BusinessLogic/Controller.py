@@ -1,4 +1,4 @@
-from Backend.OnlineStore.backend.BusinessLogic.complaints import complaints
+from .complaints import complaints
 from .accounts import accounts
 from .products import products
 from .user import user
@@ -122,3 +122,5 @@ class Store:
     def getComplaints(self, account_id):
         account = self.accounts.getAccount(account_id)
         return account.complaints
+
+    # Add Rest Created Functions in Controller

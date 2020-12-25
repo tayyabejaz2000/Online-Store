@@ -18,6 +18,12 @@ class user:
     def getCart(self):
         return self.account.cart
 
+    def getWallet(self):
+        return self.account.wallet
+
+    def getBillingAddresses(self):
+        return self.account.billing_addresses()
+
     def addProductToCart(self, product, quantity):
         try:
             cart = self.getCart()
