@@ -36,11 +36,38 @@ class Store:
         User = user(account)
         User.addBillingAddress(address)
 
+    def getCart(self, account_id):
+        account = self.accounts.getAccount(account_id)
+        User = user(account)
+        cart = User.getCart()
+        return cart  # confirm return
+
     def addProductToCart(self, account_id, product_id, quantity):
         account = self.accounts.getAccount(account_id)
         product = self.products.getProduct(product_id)
         User = user(account)
         User.addProductToCart(product, quantity)
+
+    def addBalance(self, account_id, balance, password):
+        account = self.accounts.getAccount(account_id)
+        User = user(account)
+        if User.authWallet(password):
+            User.addBalance(balance=balance)
+        else:
+            raise Exception("Invalid Wallet Password!")
+
+    def removeBalance(self, account_id, balance, password):
+        account = self.accounts.getAccount(account_id)
+        User = user(account)
+        if User.authWallet(password):
+            User.removeBalance(balance=balance)
+        else:
+            raise Exception("Invalid Wallet Password!")
+
+    def addComplaint(self, account_id, complaint_body):
+        account = self.accounts.getAccount(account_id)
+        User = user(account)
+        User.addComplaint(complaint_body)
 
     # vendor.py functions
 
@@ -48,6 +75,11 @@ class Store:
         account = self.accounts.getAccount(account_id)
         Vendor = vendor(account)
         Vendor.editShop(shop_name, shop_location)
+
+    def getShop(self, account_id):
+        account = self.accounts.getAccount(account_id)
+        Vendor = vendor(account)
+        return Vendor.getShop()  # confirm return
 
     # products.py functions
 

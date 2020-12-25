@@ -12,9 +12,6 @@ class products:
     def getCategory(self, category_id):
         return Category.objects.get(name=category_id)
 
-    def getAllProducts(self):
-        return list(Product.objects.filter(isRemoved=False))
-
     def addProduct(self, product_name, product_desc, quantity, category, shop, price):
         try:
 
@@ -25,6 +22,18 @@ class products:
         except:
             raise Exception("Couldn't add Product for Shop, [Product Name]:" + str(product_name) +
                             ", [Product Description]:" + str(product_desc) + ", [Quantity]:" + str(quantity))
+
+    def removeProduct(self, product_id):
+        try:
+            product = self.getProduct(product_id)
+            product.isRemoved = True
+            product.save()
+        except:
+            raise Exception("Couldn't delete Product: [Product ID]:" +
+                            str(product_id))
+
+    def getAllProducts(self):
+        return list(Product.objects.filter(isRemoved=False))
 
     def updateProduct(self, product_id, product_name, product_desc, product_quantity, category, price):
         try:
@@ -38,15 +47,6 @@ class products:
         except:
             raise Exception("Couldn't update Product for Shop, [Product Name]:" + str(product_name) +
                             ", [Product Description]:" + str(product_desc) + ", [Quantity]:" + str(product_quantity))
-
-    def removeProduct(self, product_id):
-        try:
-            product = self.getProduct(product_id)
-            product.isRemoved = True
-            product.save()
-        except:
-            raise Exception("Couldn't delete Product: [Product ID]:" +
-                            str(product_id))
 
     # adan
 
