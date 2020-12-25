@@ -11,24 +11,25 @@ class products:
     def getAllProducts(self):
         return list(Product.objects.filter(isRemoved=False))
 
-    def addProduct(self, product_name, product_desc, quantity, category, shop):
+    def addProduct(self, product_name, product_desc, quantity, category, shop, price):
         try:
 
             _category = self.getCategory(category)
             product = Product(name=product_name, description=product_desc,
-                              stock=quantity, shop=shop, category=_category)
+                              stock=quantity, shop=shop, category=_category, price=price)
             product.save()
         except:
             raise Exception("Couldn't add Product for Shop, [Product Name]:" + str(product_name) +
                             ", [Product Description]:" + str(product_desc) + ", [Quantity]:" + str(quantity))
 
-    def updateProduct(self, product_id, product_name, product_desc, product_quantity, category):
+    def updateProduct(self, product_id, product_name, product_desc, product_quantity, category, price):
         try:
             product = self.getProduct(product_id)
             product.name = product_name
             product.description = product_desc
             product.stock = product_quantity
             product.category = self.getCategory(category)
+            product.price = price
             product.save()
         except:
             raise Exception("Couldn't update Product for Shop, [Product Name]:" + str(product_name) +

@@ -35,7 +35,7 @@ class Store:
         Vendor = vendor(account)
         Vendor.editShop(shop_name, shop_location)
 
-    def addProduct(self, account_id, product_name, product_desc, quantity, category):
+    def addProduct(self, account_id, product_name, product_desc, quantity, category, price):
         account = self.accounts.getAccount(account_id)
         Vendor = vendor(account)
         self.products.addProduct(product_name, product_desc, quantity,
@@ -48,9 +48,9 @@ class Store:
         products = self.products.getAllProducts()
         return {"products": products}
 
-    def updateProduct(self, product_id, product_name, product_desc, quantity, category):
+    def updateProduct(self, product_id, product_name, product_desc, quantity, category, price):
         self.products.updateProduct(product_id, product_name,
-                                    product_desc, quantity, category)
+                                    product_desc, quantity, category, price)
 
     def addProductToCart(self, account_id, product_id, quantity):
         account = self.accounts.getAccount(account_id)
