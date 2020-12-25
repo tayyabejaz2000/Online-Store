@@ -80,7 +80,7 @@ class CartProduct(models.Model):
 
 
 class Invoice(models.Model):
-    net = models.PositiveIntegerField()
+    net = models.PositiveIntegerField(default=0)
     discount = models.PositiveIntegerField(default=0,
                                            validators=[MaxValueValidator(100)])
 
@@ -138,3 +138,4 @@ class Review(models.Model):
                                         validators=[MaxValueValidator(5)])
     feedback = models.CharField(max_length=512)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    user = models.ForeignKey(UserAccount, on_delete=models.CASCADE)

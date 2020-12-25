@@ -1,4 +1,4 @@
-from ..models import Category, Product
+from ..models import Category, Product, Review
 
 
 class products:
@@ -13,6 +13,7 @@ class products:
 
     def addProduct(self, product_name, product_desc, quantity, category, shop):
         try:
+
             _category = self.getCategory(category)
             product = Product(name=product_name, description=product_desc,
                               stock=quantity, shop=shop, category=_category)
@@ -41,3 +42,9 @@ class products:
         except:
             raise Exception("Couldn't delete Product: [Product ID]:" +
                             str(product_id))
+
+    # adan
+
+    def addReview(self, account_id, product_id, stars, feedback):
+        Review().addReview(account_id=account_id,
+                           product_id=product_id, stars=stars, feedback=feedback)
