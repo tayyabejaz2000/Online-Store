@@ -1,7 +1,11 @@
+from .reviews import reviews
 from ..models import Category, Product, Review
 
 
 class products:
+    def __init__(self):
+        self.reviews = reviews()
+
     def getProduct(self, product_id):
         return Product.objects.get(pk=product_id)
 
@@ -45,6 +49,5 @@ class products:
 
     # adan
 
-    def addReview(self, account_id, product_id, stars, feedback):
-        Review().addReview(account_id=account_id,
-                           product_id=product_id, stars=stars, feedback=feedback)
+    def addReview(self, account, product, stars, feedback):
+        self.reviews.addReview(account, product, stars, feedback)

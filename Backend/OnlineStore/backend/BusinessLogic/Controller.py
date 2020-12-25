@@ -61,5 +61,6 @@ class Store:
     # adan
 
     def addReview(self, account_id, product_id, stars, feedback):
-        self.products.addReview(
-            account_id=account_id, product_id=product_id, stars=stars, feedback=feedback)
+        account = self.accounts.getAccount(account_id)
+        product = self.products.getProduct(product_id)
+        self.products.addReview(account, product, stars, feedback)

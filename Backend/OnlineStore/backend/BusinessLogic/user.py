@@ -21,8 +21,22 @@ class user:
     def addProductToCart(self, product, quantity):
         try:
             cart = self.getCart()
-            CartEntry = CartProduct(
-                cart=cart, product=product, quantity=quantity)
+            CartEntry = CartProduct(cart=cart, product=product,
+                                    quantity=quantity)
             CartEntry.save()
         except:
             raise Exception("Unable to add Product to Cart")
+
+    def authWallet(self, password):
+        wallet = self.account.wallet
+        return wallet.check_password(password)
+
+    def addBalance(self, balance):
+        wallet = self.account.wallet
+        wallet.balance += balance
+        wallet.save()
+
+    def removeBalance(self, balance):
+        wallet = self.account.wallet
+        wallet.balance -= balance
+        wallet.save()
