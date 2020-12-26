@@ -4,12 +4,12 @@ from ..models import WalletModel
 class wallet(WalletModel):
     def __init__(self, *args, **kwargs):
         if len(args) > 0 and isinstance(args[0], WalletModel):
-            self = args[0]
+            self.data = args[0]
         else:
-            super().__init__(*args, **kwargs)
+            self.data = WalletModel(*args, **kwargs)
 
     def authWallet(self, password):
-        return self.check_password(password)
+        return self.data.check_password(password)
 
     def addBalance(self, balance):
         self.balance += balance

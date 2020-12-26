@@ -4,9 +4,9 @@ from ..models import ReviewModel
 class review(ReviewModel):
     def __init__(self, *args, **kwargs):
         if len(args) > 0 and isinstance(args[0], ReviewModel):
-            self = args[0]
+            self.data = args[0]
         else:
-            super().__init__(*args, **kwargs)
+            self.data = ReviewModel(*args, **kwargs)
 
     @staticmethod
     def all():
@@ -19,6 +19,3 @@ class review(ReviewModel):
     @staticmethod
     def filter(*args, **kwargs):
         return ReviewModel.objects.filter(*args, **kwargs)
-
-    class Meta:
-        abstract = True

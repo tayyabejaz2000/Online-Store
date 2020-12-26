@@ -25,10 +25,6 @@ class product:
         self.stock += quantity
         self.save()
 
-    def setStock(self, quantity):
-        self.stock = quantity
-        self.save()
-
     def removeStock(self, quantity):
         if self.stock < quantity:
             return False
@@ -36,7 +32,7 @@ class product:
         self.save()
         return True
 
-    def update(self, product_name, product_description, product_stock, product_price, product_discount, product_category: category):
+    def update(self, product_name, product_description, product_stock, product_price, product_discount, product_category):
         try:
             self.name = product_name
             self.description = product_description
@@ -104,3 +100,12 @@ class product:
 
     def setisRemoved(self, value):
         self.data.isRemoved = value
+
+    name = property(getName, setName)
+    description = property(getdescription, setdescription)
+    stock = property(getstock, setstock)
+    price = property(getprice, setprice)
+    discount = property(getdiscount, setdiscount)
+    shop = property(getshop, setshop)
+    category = property(getcategory, setcategory)
+    isRemoved = property(getisRemoved, setisRemoved)
