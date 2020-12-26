@@ -1,9 +1,9 @@
-from ..models import Shop
+from ..models import ShopModel
 
 
-class shop(Shop):
+class shop(ShopModel):
     def __init__(self, *args, **kwargs):
-        if isinstance(args[0], Shop):
+        if len(args) > 0 and isinstance(args[0], ShopModel):
             self = args[0]
         else:
             super().__init__(*args, **kwargs)
@@ -19,3 +19,6 @@ class shop(Shop):
             self.save()
         except:
             raise Exception("Couldn't Edit Shop Object")
+
+    class Meta:
+        abstract = True

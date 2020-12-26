@@ -1,10 +1,10 @@
 from rest_framework import serializers
-from .models import UserAccount
+from .models import AccountModel
 
 
 class AccountsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = UserAccount
+        model = AccountModel
         exclude = ('groups', 'user_permissions',)
         extra_kwargs = {'password': {'write_only': True}}
 

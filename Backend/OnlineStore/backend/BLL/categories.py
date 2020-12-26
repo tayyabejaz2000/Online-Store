@@ -6,10 +6,10 @@ class categories:
         return category.all()
 
     def get(self, *args, **kwargs):
-        return category.get(args, kwargs)
+        return category.get(*args, **kwargs)
 
     def filter(self, *args, **kwargs):
-        return category.filter(args, kwargs)
+        return category.filter(*args, **kwargs)
 
     def addCategory(self, category_name):
         try:

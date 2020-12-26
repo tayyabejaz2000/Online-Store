@@ -1,10 +1,9 @@
 from .account import account
-from .complaint import complaint
 
 
 class employee(account):
     def __init__(self, *args, **kwargs):
-        if isinstance(args[0], account):
-            self = args[0]
+        if len(args) > 0 and isinstance(args[0], account):
+            self.data = args[0].data
         else:
             super().__init__(*args, **kwargs)

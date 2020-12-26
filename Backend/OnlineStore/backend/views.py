@@ -1,7 +1,7 @@
 from rest_framework import permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .BusinessLogic.Controller import Store
+from .BLL.Controller import Store
 
 # Views just forward all calls to Controller
 controller = Store()
@@ -9,7 +9,7 @@ controller = Store()
 
 class Login:
     def as_view():
-        return controller.login_user()
+        return controller.login_account()
 
 
 class Signup(APIView):
@@ -18,7 +18,7 @@ class Signup(APIView):
 
     def post(self, request):
         try:
-            controller.create_user(request.data)
+            controller.create_account(request.data)
             return Response(status=status.HTTP_201_CREATED)
         except Exception as e:
             print("Exception Thrown: ", e)  # Log error
@@ -31,7 +31,7 @@ class Logout(APIView):
 
     def post(self, request):
         try:
-            controller.logout_user(request.data["refresh_token"])
+            controller.logout_account(request.data.refresh_token)
             return Response(status=status.HTTP_205_RESET_CONTENT)
         except Exception as e:
             print("Exception Thrown: ", e)  # Log error
@@ -44,7 +44,7 @@ class GetUserData(APIView):
 
     def post(self, request):
         try:
-            userdata = controller.getUserData(request.data.id)
+            userdata = controller.getAccountData(request.data.id)
             return Response(data=userdata, status=status.HTTP_200_OK)
         except Exception as e:
             print("Exception Throw: ", e)  # Log Error
@@ -84,8 +84,15 @@ class AddProduct(APIView):
 
     def post(self, request):
         try:
-            controller.addProduct(request.data.id, request.data.product_name,
-                                  request.data.product_desc, int(request.data.quantity))
+
+            controller.addProduct(request.data.id,
+                                  request.data.product_name,
+                                  request.data.product_desc,
+                                  int(request.data.quantity),
+                                  int(request.data.price),
+                                  int(request.data.discount),
+                                  request.data.category
+                                  )
             return Response(status=status.HTTP_201_CREATED)
         except Exception as e:
             print("Exception Thrown: ", e)  # Log error
@@ -124,8 +131,14 @@ class UpdateProduct(APIView):
 
     def post(self, request):
         try:
-            controller.updateProduct(request.data.product_id, request.data.product_name,
-                                     request.data.product_desc, request.data.quantity)
+            controller.updateProduct(request.data.product_id,
+                                     request.data.product_name,
+                                     request.data.product_desc,
+                                     int(request.data.quantity),
+                                     int(request.data.price),
+                                     int(request.data.discount),
+                                     request.data.category
+                                     )
             return Response(status=status.HTTP_200_OK)
         except Exception as e:
             print("Exception Thrown", e)  # Log Error

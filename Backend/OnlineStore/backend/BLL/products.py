@@ -14,10 +14,10 @@ class products:
         return product.all()
 
     def get(self, *args, **kwargs):
-        return product.get(args, kwargs)
+        return product.get(*args, **kwargs)
 
     def filter(self, *args, **kwargs):
-        return product.filter(args, kwargs)
+        return product.filter(*args, **kwargs)
 
     def addProduct(self, product_name, product_desc, quantity, price, discount, category_name, seller: seller):
         try:

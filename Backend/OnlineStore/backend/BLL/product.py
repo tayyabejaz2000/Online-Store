@@ -1,25 +1,25 @@
-from ..models import Product
+from ..models import ProductModel
 from .category import category
 
 
-class product(Product):
+class product:
     def __init__(self, *args, **kwargs):
-        if isinstance(args[0], Product):
-            self = args[0]
+        if len(args) > 0 and isinstance(args[0], ProductModel):
+            self.data = args[0]
         else:
-            super().__init__(*args, **kwargs)
+            self.data = ProductModel(*args, **kwargs)
 
     @staticmethod
     def all():
-        return Product.objects.all()
+        return ProductModel.objects.all()
 
     @staticmethod
     def get(*args, **kwargs):
-        return Product.objects.get(args, kwargs)
+        return ProductModel.objects.get(*args, **kwargs)
 
     @staticmethod
     def filter(*args, **kwargs):
-        return Product.objects.filter(args, kwargs)
+        return ProductModel.objects.filter(*args, **kwargs)
 
     def addStock(self, quantity):
         self.stock += quantity

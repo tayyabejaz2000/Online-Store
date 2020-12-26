@@ -10,10 +10,10 @@ class accounts:
         return account.all()
 
     def get(self, *args, **kwargs):
-        return account.get(args, kwargs)
+        return account.get(*args, **kwargs)
 
     def filter(self, *args, **kwargs):
-        return account.filter(args, kwargs)
+        return account.filter(*args, **kwargs)
 
     def create_account(self, username, password, email, first_name, last_name, user_type, phone_number):
         try:

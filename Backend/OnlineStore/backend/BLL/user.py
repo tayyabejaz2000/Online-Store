@@ -1,11 +1,13 @@
 from .account import account
 from .wallet import wallet
+import copy
 
 
 class user(account):
+
     def __init__(self, *args, **kwargs):
-        if isinstance(args[0], account):
-            self = args[0]
+        if len(args) > 0 and isinstance(args[0], account):
+            self.data = args[0]
         else:
             super().__init__(*args, **kwargs)
             w = wallet(user=self)
@@ -15,12 +17,12 @@ class user(account):
             w.save()
 
     @property
-    def Wallet(self) -> wallet:
-        return wallet(self.wallet)
+    def wallet(self) -> wallet:
+        return wallet(self.data.wallet)
 
     @property
-    def Complaints(self):
-        return self.complaints
+    def complaints(self):
+        return self.data.complaints
 
     def authWallet(self, password):
         return self.Wallet.check_password(password)
@@ -30,3 +32,6 @@ class user(account):
 
     def removeBalance(self, balance):
         self.Wallet.removeBalance(balance)
+
+    class Meta:
+        abstract = True

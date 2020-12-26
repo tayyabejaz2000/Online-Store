@@ -11,10 +11,10 @@ class complaints:
         return complaint.all()
 
     def get(self, *args, **kwargs):
-        return complaint.get(args, kwargs)
+        return complaint.get(*args, **kwargs)
 
     def filter(self, *args, **kwargs):
-        return complaint.filter(args, kwargs)
+        return complaint.filter(*args, **kwargs)
 
     def resolveComplaint(self, complaint_id, employee, response):
         c = complaint(self.get(pk=complaint_id))

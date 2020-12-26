@@ -1,11 +1,10 @@
-from Backend.OnlineStore.backend.BusinessLogic.buyer import buyer
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MaxValueValidator
 from django.contrib.auth.hashers import make_password, check_password
 
 
-class UserAccount(AbstractUser):
+class AccountModel(AbstractUser):
     phone_number = models.CharField(max_length=12, null=True)
     user_type = models.CharField(max_length=2, default='B', null=False, choices=[
         ('S', 'Seller'),  # Normal Seller
@@ -21,8 +20,8 @@ class UserAccount(AbstractUser):
         ]
 
 
-class BillingAddress(models.Model):
-    buyer = models.ForeignKey(UserAccount, on_delete=models.CASCADE,
+class BillingAddressModel(models.Model):
+    buyer = models.ForeignKey(AccountModel, on_delete=models.CASCADE,
                               limit_choices_to={'user_type': 'B'}, related_name='billing_addresses')
     billingAddress = models.CharField(max_length=512, null=False)
 
@@ -33,8 +32,8 @@ class BillingAddress(models.Model):
         return self.buyer.username
 
 
-class Wallet(models.Model):
-    user = models.OneToOneField(UserAccount, on_delete=models.CASCADE,
+class WalletModel(models.Model):
+    user = models.OneToOneField(AccountModel, on_delete=models.CASCADE,
                                 related_name='wallet')
     balance = models.PositiveIntegerField(default=0)
     wallet_password = models.CharField(max_length=128, null=True, default=None)
@@ -46,9 +45,9 @@ class Wallet(models.Model):
         return check_password(password, self.wallet_password)
 
 
-class Shop(models.Model):
+class ShopModel(models.Model):
     seller = models.OneToOneField(
-        UserAccount, on_delete=models.CASCADE, limit_choices_to={'user_type': 'S'}, related_name='shop')
+        AccountModel, on_delete=models.CASCADE, limit_choices_to={'user_type': 'S'}, related_name='shop')
     name = models.CharField(max_length=30)
     location = models.CharField(max_length=200)
 
@@ -56,71 +55,71 @@ class Shop(models.Model):
         return self.name + ':' + self.seller.username
 
 
-class Category(models.Model):
+class CategoryModel(models.Model):
     name = models.CharField(max_length=20, primary_key=True)
 
 
-class Product(models.Model):
+class ProductModel(models.Model):
     name = models.CharField(max_length=50)
     description = models.TextField()
     stock = models.PositiveIntegerField(default=0)
     price = models.PositiveIntegerField(default=0)
     discount = models.PositiveIntegerField(default=0,
                                            validators=[MaxValueValidator(100)])
-    shop = models.ForeignKey(Shop, on_delete=models.CASCADE,
+    shop = models.ForeignKey(ShopModel, on_delete=models.CASCADE,
                              null=False, related_name='products')
     category = models.ForeignKey(
-        Category, on_delete=models.CASCADE, null=False, related_name='products')
+        CategoryModel, on_delete=models.CASCADE, null=False, related_name='products')
     isRemoved = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name + ":" + self.category.name
 
 
-class Cart(models.Model):
-    buyer = models.OneToOneField(UserAccount, on_delete=models.CASCADE,
+class CartModel(models.Model):
+    buyer = models.OneToOneField(AccountModel, on_delete=models.CASCADE,
                                  limit_choices_to={'user_type': 'B'}, related_name='cart')
-    products = models.ManyToManyField(Product, through='CartProduct',
+    products = models.ManyToManyField(ProductModel, through='CartProductModel',
                                       through_fields=('cart', 'product',))
 
     def __str__(self):
         return self.buyer.username
 
 
-class CartProduct(models.Model):
+class CartProductModel(models.Model):
     cart = models.ForeignKey(
-        Cart, on_delete=models.CASCADE, related_name='cart_products')
+        CartModel, on_delete=models.CASCADE, related_name='cart_products')
     product = models.ForeignKey(
-        Product, on_delete=models.CASCADE)
+        ProductModel, on_delete=models.CASCADE)
     quantity = models.IntegerField(null=False, default=1)
 
     class Meta:
         unique_together = ('cart', 'product')
 
 
-class Invoice(models.Model):
+class InvoiceModel(models.Model):
     net = models.PositiveIntegerField(default=0)
     discount = models.PositiveIntegerField(default=0,
                                            validators=[MaxValueValidator(100)])
 
 
-class Order(models.Model):
-    buyer = models.ForeignKey(UserAccount, on_delete=models.CASCADE,
+class OrderModel(models.Model):
+    buyer = models.ForeignKey(AccountModel, on_delete=models.CASCADE,
                               limit_choices_to={'user_type': 'B'}, related_name='ordes')
     created_on = models.DateTimeField(auto_now_add=True)
     invoice = models.OneToOneField(
-        Invoice, on_delete=models.CASCADE, related_name='order')
-    ordered_products = models.ManyToManyField(Product, through='OrderedProduct',
+        InvoiceModel, on_delete=models.CASCADE, related_name='order')
+    ordered_products = models.ManyToManyField(ProductModel, through='OrderedProductModel',
                                               through_fields=('order', 'product', ))
 
-    address = models.ForeignKey(BillingAddress, on_delete=models.CASCADE,
+    address = models.ForeignKey(BillingAddressModel, on_delete=models.CASCADE,
                                 related_name='shippings')
 
 
-class OrderedProduct(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE,
+class OrderedProductModel(models.Model):
+    order = models.ForeignKey(OrderModel, on_delete=models.CASCADE,
                               related_name='products')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE,
+    product = models.ForeignKey(ProductModel, on_delete=models.CASCADE,
                                 related_name='orders')
     quantity = models.IntegerField(null=False, default=1)
 
@@ -135,20 +134,20 @@ class OrderedProduct(models.Model):
         unique_together = ('order', 'product')
 
 
-class Complaint(models.Model):
+class ComplaintModel(models.Model):
     complaint_body = models.CharField(max_length=512)
     answer_body = models.CharField(max_length=512, null=True, default=None)
-    user = models.ForeignKey(UserAccount, on_delete=models.CASCADE,
+    user = models.ForeignKey(AccountModel, on_delete=models.CASCADE,
                              related_name='complaints')
-    lookup_employee = models.ForeignKey(UserAccount, on_delete=models.CASCADE, null=True, default=None,
+    lookup_employee = models.ForeignKey(AccountModel, on_delete=models.CASCADE, null=True, default=None,
                                         limit_choices_to={'user_type': 'E'}, related_name='lookup_complaints')
 
 
-class Review(models.Model):
+class ReviewModel(models.Model):
     stars = models.PositiveIntegerField(default=0,
                                         validators=[MaxValueValidator(5)])
     feedback = models.CharField(max_length=512)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE,
+    product = models.ForeignKey(ProductModel, on_delete=models.CASCADE,
                                 related_name='reviews')
-    buyer = models.ForeignKey(UserAccount, on_delete=models.CASCADE,
+    buyer = models.ForeignKey(AccountModel, on_delete=models.CASCADE,
                               related_name='reviews')

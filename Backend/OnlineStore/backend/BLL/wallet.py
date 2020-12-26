@@ -1,9 +1,9 @@
-from ..models import Wallet
+from ..models import WalletModel
 
 
-class wallet(Wallet):
+class wallet(WalletModel):
     def __init__(self, *args, **kwargs):
-        if isinstance(args[0], Wallet):
+        if len(args) > 0 and isinstance(args[0], WalletModel):
             self = args[0]
         else:
             super().__init__(*args, **kwargs)
@@ -18,3 +18,6 @@ class wallet(Wallet):
     def removeBalance(self, balance):
         self.balance -= balance
         self.save()
+
+    class Meta:
+        abstract = True

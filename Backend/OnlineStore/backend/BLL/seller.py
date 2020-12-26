@@ -1,12 +1,10 @@
-from ..models import UserAccount
 from .shop import shop
-from .wallet import wallet
 from .user import user
 
 
 class seller(user):
     def __init__(self, *args, **kwargs):
-        if isinstance(args[0], user):
+        if len(args) > 0 and isinstance(args[0], user):
             self = args[0]
         else:
             super().__init__(*args, **kwargs)
@@ -21,3 +19,6 @@ class seller(user):
 
     def editShop(self, shop_name, shop_location):
         self.Shop.edit(shop_name, shop_location)
+
+    class Meta:
+        abstract = True

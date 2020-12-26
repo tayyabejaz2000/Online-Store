@@ -1,18 +1,29 @@
-from Backend.OnlineStore.backend.BusinessLogic.product import product
-from ..models import Cart
+from .product import product
+from ..models import CartModel
 from .cartproduct import cartproduct
 
 
-class cart(Cart):
+class cart:
     def __init__(self, *args, **kwargs):
-        if isinstance(args[0], Cart):
-            self = args[0]
+        if len(args) > 0 and isinstance(args[0], CartModel):
+            self.data = args[0]
         else:
-            super().__init__(*args, **kwargs)
+            self.data = CartModel(*args, **kwargs)
+
+    def setbuyer(self, value):
+        self.data.buyer = value
+
+    def getBuyer(self):
+        return self.data.buyer
+    buyer = property(getBuyer, setbuyer)
+
+    @property
+    def products(self):
+        return self.data.products
 
     @property
     def cartProducts(self):
-        return self.cart_products
+        return self.data.cart_products
 
     @property
     def netTotal(self):
@@ -27,14 +38,13 @@ class cart(Cart):
 
     def addProduct(self, product, quantity):
         try:
-            c = cartproduct(cart=self, product=product, quantity=quantity)
+            c = cartproduct(cart=self.data, product=product, quantity=quantity)
             c.save()
         except:
             raise Exception("Unable to add Product to Cart")
 
     def removeProduct(self, product):
         try:
-            cart_products = self.cartProducts
-            cart_products.filter(product=product).delete()
+            self.cartProducts.filter(product=product).delete()
         except:
             raise Exception("Couldn't delete Cart Product")

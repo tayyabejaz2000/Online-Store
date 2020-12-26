@@ -8,8 +8,8 @@ from .billingaddress import billingAddress
 
 class orders:
     def placeOrder(self, buyer: buyer, discount: int, billingAddress: billingAddress):
-        cart = buyer.Cart
-        wallet = buyer.Wallet
+        cart = buyer.cart
+        wallet = buyer.wallet
         net = cart.netTotal
         i = invoice(net=net, discount=discount)
         if (wallet.balance < net):
@@ -20,10 +20,6 @@ class orders:
         cart_products = cart.cartProducts
         for cart_product in cart_products:
             prod = product(cart_product.product)
-            if(prod.removeStock(cart_product.quantity)):
-                cart.removeProduct(prod)
-                orderedProduct = orderedproduct(order=o, product=prod,
-                                                quantity=cart_product.quantity)
-                orderedProduct.save()
-
+            o.addProduct(prod, cart_product.quantity)
+            cart.removeProduct(prod)
         wallet.removeBalance(net)
