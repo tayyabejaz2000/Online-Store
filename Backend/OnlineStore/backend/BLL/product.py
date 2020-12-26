@@ -52,3 +52,55 @@ class product:
     def removeProduct(self):
         self.isRemoved = True
         self.save()
+
+    # Getters
+
+    def getName(self):
+        return self.data.name
+
+    def getdescription(self):
+        return self.data.description
+
+    def getstock(self):
+        return self.data.stock
+
+    def getprice(self):
+        return self.data.price
+
+    def getdiscount(self):
+        return self.data.discount
+
+    def getshop(self):
+        return self.data.shop
+
+    def getcategory(self):
+        return self.data.category
+
+    def getisRemoved(self):
+        return self.data.isRemoved
+
+    # Setters
+
+    def setName(self, value):
+        self.data.name = value
+
+    def setdescription(self, value):
+        self.data.description = value
+
+    def setstock(self, value):
+        self.data.stock = value
+
+    def setprice(self, value):
+        self.data.price = value
+
+    def setdiscount(self, value):
+        self.data.discount = value
+
+    def setshop(self, value):
+        self.data.shop = value
+
+    def setcategory(self, value):
+        self.data.category = value
+
+    def setisRemoved(self, value):
+        self.data.isRemoved = value
