@@ -1,16 +1,20 @@
 from .reviews import reviews
 from ..models import Category, Product
+from .product import product
 
 
 class products:
     def __init__(self):
         self.reviews = reviews()
 
-    def getProduct(self, product_id):
-        return Product.objects.get(pk=product_id)
+    def all(self):
+        return product.all()
 
-    def getCategory(self, category_id):
-        return Category.objects.get(name=category_id)
+    def get(self, *args, **kwargs):
+        return product.get(args, kwargs)
+
+    def filter(self, *args, **kwargs):
+        return product.filter(args, kwargs)
 
     def addProduct(self, product_name, product_desc, quantity, category, shop, price):
         try:

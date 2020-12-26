@@ -1,21 +1,20 @@
-from ..models import Complaint
+from .complaint import complaint
 
 
 class complaints:
-
     def addComplaint(self, user, complaint_body):
-        complaint = Complaint(complaint_body=complaint_body,
-                              account=user)
-        complaint.save()
+        c = complaint(complaint_body=complaint_body,
+                      account=user)
+        c.save()
 
-    def getAllComplaints(self):
-        return Complaint.objects.all()
+    def all(self):
+        return complaint.all()
 
-    def getComplaint(self, complaint_id):
-        return Complaint.objects.get(pk=complaint_id)
+    def get(self, *args, **kwargs):
+        return complaint.get(args, kwargs)
 
-    def resolveComplaint(self, complaint_id, account, response):
-        complaint = self.getComplaint(complaint_id)
-        complaint.lookup_employee = account
-        complaint.answer = response
-        complaint.save()
+    def filter(self, *args, **kwargs):
+        return complaint.filter(args, kwargs)
+
+    def resolveComplaint(self, complaint: complaint, account, response):
+        complaint.resolve(account, response)

@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MaxValueValidator
 from django.contrib.auth.hashers import make_password, check_password
-from django.db.models.aggregates import Sum
 
 
 class UserAccount(AbstractUser):
@@ -62,7 +61,8 @@ class Product(models.Model):
     description = models.TextField()
     stock = models.PositiveIntegerField(default=0)
     price = models.PositiveIntegerField(default=0)
-    # Add Discount
+    discount = models.PositiveIntegerField(default=0,
+                                           validators=[MaxValueValidator(100)])
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE,
                              null=False, related_name='products')
     category = models.ForeignKey(
@@ -82,17 +82,6 @@ class Cart(models.Model):
     def __str__(self):
         return self.user.username
 
-    def empty(self):
-        self.cart_products.all().delete()
-
-    @property
-    def netTotal(self):
-        net = 0
-        for cart_product in self.cart_products.all():
-            # Calculate Discounted Price
-            net += cart_product.quantity * cart_product.product.price
-        return net
-
 
 class CartProduct(models.Model):
     cart = models.ForeignKey(
@@ -100,10 +89,6 @@ class CartProduct(models.Model):
     product = models.ForeignKey(
         Product, on_delete=models.CASCADE)
     quantity = models.IntegerField(null=False, default=1)
-
-    @property
-    def price(self):
-        return self.product.price
 
     class Meta:
         unique_together = ('cart', 'product')
@@ -113,10 +98,6 @@ class Invoice(models.Model):
     net = models.PositiveIntegerField(default=0)
     discount = models.PositiveIntegerField(default=0,
                                            validators=[MaxValueValidator(100)])
-
-    @property
-    def total(self):
-        return self.net - (self.net * (self.discount/100))
 
 
 class Order(models.Model):
@@ -128,14 +109,6 @@ class Order(models.Model):
     ordered_products = models.ManyToManyField(Product, through='OrderedProduct',
                                               through_fields=('order', 'product', ))
 
-
-class Shipping(models.Model):
-    status = models.CharField(max_length=2, default='P', null=False, choices=[
-        ('P', 'Placed'),
-        ('S', 'Shipped'),
-        ('C', 'Completed'),
-        ('R', 'Returned'),
-    ])
     address = models.ForeignKey(BillingAddress, on_delete=models.CASCADE,
                                 related_name='shippings')
 
@@ -147,8 +120,12 @@ class OrderedProduct(models.Model):
                                 related_name='orders')
     quantity = models.IntegerField(null=False, default=1)
 
-    shipping = models.OneToOneField(Shipping, on_delete=models.CASCADE,
-                                    related_name='OrderedProduct')
+    status = models.CharField(max_length=2, default='P', null=False, choices=[
+        ('P', 'Placed'),
+        ('S', 'Shipped'),
+        ('C', 'Completed'),
+        ('R', 'Returned'),
+    ])
 
     class Meta:
         unique_together = ('order', 'product')
