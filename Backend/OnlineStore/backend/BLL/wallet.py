@@ -8,6 +8,13 @@ class wallet(WalletModel):
         else:
             self.data = WalletModel(*args, **kwargs)
 
+    def getBalance(self):
+        return self.data.balance
+
+    def setBalance(self, value):
+        self.data.balance = value
+    balance = property(getBalance, setBalance)
+
     def authWallet(self, password):
         return self.data.check_password(password)
 

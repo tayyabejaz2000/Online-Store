@@ -23,7 +23,7 @@ class products:
         try:
             categ = self.categories.get(pk=category_name)
             p = product(name=product_name, description=product_desc,
-                        stock=quantity, price=price, discount=discount, shop=seller.Shop, category=categ)
+                        stock=quantity, price=price, discount=discount, shop=seller.shop, category=categ)
             p.save()
         except:
             raise Exception("Couldn't add Product for Shop, [Product Name]:" + str(product_name) +
@@ -49,6 +49,3 @@ class products:
 
     def addCategory(self, category_name):
         self.categories.addCategory(category_name)
-
-    def save(self):
-        self.data.save()

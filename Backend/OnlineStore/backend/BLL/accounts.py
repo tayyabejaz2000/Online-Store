@@ -26,7 +26,9 @@ class accounts:
     def create_buyer_account(self, username, password, email, first_name, last_name, user_type, phone_number, wallet_password):
         try:
             b = buyer(username=username, password=password, email=email, first_name=first_name,
-                      last_name=last_name, user_type=user_type, phone_number=phone_number, wallet_password=wallet_password)
+                      last_name=last_name, user_type=user_type, phone_number=phone_number)
+            b.create_wallet(wallet_password)
+            b.create_cart()
             b.save()
         except:
             raise Exception("Couldn't create Buyer Account")
@@ -35,8 +37,9 @@ class accounts:
                               phone_number, wallet_password, shop_name, shop_location):
         try:
             s = seller(username=username, password=password, email=email, first_name=first_name,
-                       last_name=last_name, user_type=user_type, phone_number=phone_number,
-                       wallet_password=wallet_password, shop_name=shop_name, shop_location=shop_location)
+                       last_name=last_name, user_type=user_type, phone_number=phone_number)
+            s.create_wallet(wallet_password)
+            s.create_shop(shop_name, shop_location)
             s.save()
         except:
             raise Exception("Couldn't create Seller Account")

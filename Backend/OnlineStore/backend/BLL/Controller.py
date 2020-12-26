@@ -48,24 +48,24 @@ class Store:
     # user.py functions
 
     def addBillingAddress(self, buyer_id, address):
-        a = buyer(user(account(self.accounts.get(pk=buyer_id))))
+        a = buyer(self.accounts.get(pk=buyer_id))
         a.addBillingAddress(address)
 
     def addProductToCart(self, buyer_id, product_id, quantity):
-        b = buyer(user(account(self.accounts.get(pk=buyer_id))))
+        b = buyer(self.accounts.get(pk=buyer_id))
         p = self.products.get(pk=product_id)
         b.addProductToCart(p, quantity)
 
     def addBalance(self, user_id, balance, wallet_password):
-        u = user(account(self.accounts.get(pk=user_id)))
-        if u.Wallet.authWallet(wallet_password):
+        u = user(self.accounts.get(pk=user_id))
+        if u.wallet.authWallet(wallet_password):
             u.addBalance(balance)
         else:
             raise Exception("Invalid Wallet Password!")
 
     def removeBalance(self, user_id, balance, wallet_password):
-        u = user(account(self.accounts.get(pk=user_id)))
-        if u.Wallet.authWallet(wallet_password):
+        u = user(self.accounts.get(pk=user_id))
+        if u.wallet.authWallet(wallet_password):
             u.removeBalance(balance)
         else:
             raise Exception("Invalid Wallet Password!")
@@ -73,17 +73,17 @@ class Store:
     # seller.py functions
 
     def editShop(self, seller_id, shop_name, shop_location):
-        s = seller(user(account(self.accounts.get(pk=seller_id))))
+        s = seller(self.accounts.get(pk=seller_id))
         s.editShop(shop_name, shop_location)
 
     def getShop(self, seller_id):
-        s = seller(user(account(self.accounts.get(pk=seller_id))))
-        return dict(s.Shop)
+        s = seller(self.accounts.get(pk=seller_id))
+        return s.shop.__dict__()
 
     # products.py functions
 
     def addProduct(self, seller_id, product_name, product_desc, quantity, price, discount, category_name):
-        s = seller(user(account(self.accounts.get(pk=seller_id))))
+        s = seller(self.accounts.get(pk=seller_id))
         self.products.addProduct(product_name, product_desc, quantity, price,
                                  discount, category_name, s)
 
@@ -92,19 +92,19 @@ class Store:
 
     def getAllProducts(self):
         products = self.products.all()
-        return {"products": products}
+        return {"products": list(products.values())}
 
     def updateProduct(self, product_id, product_name, product_desc, quantity, price, discount, category_name):
         self.products.updateProduct(product_id, product_name, product_desc, quantity,
                                     price, discount, category_name)
 
     def addReview(self, buyer_id, product_id, stars, feedback):
-        b = buyer(user(account(self.accounts.get(pk=buyer_id))))
+        b = buyer(self.accounts.get(pk=buyer_id))
         self.products.addReview(b, product_id, stars, feedback)
 
     # complaints.py
     def addComplaint(self, user_id, complaint_body):
-        u = user(account(self.accounts.get(pk=user_id)))
+        u = user(self.accounts.get(pk=user_id))
         self.complaints.addComplaint(u, complaint_body)
 
     def getAllComplaints(self):
@@ -118,5 +118,5 @@ class Store:
 
     def getComplaints(self, user_id):
         u = user(account(self.accounts.get(pk=user_id)))
-        return u.Complaints
+        return u.complaints
     # Add Rest Created Functions in Controller

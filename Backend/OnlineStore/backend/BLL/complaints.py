@@ -4,7 +4,7 @@ from .complaint import complaint
 class complaints:
     def addComplaint(self, user, complaint_body):
         c = complaint(complaint_body=complaint_body,
-                      user=user)
+                      user=user.data)
         c.save()
 
     def all(self):

@@ -28,12 +28,12 @@ class buyer(user):
     def reviews(self):
         return self.data.reviews
 
-    def createCart(self):
+    def create_cart(self):
         c = cart(buyer=self.data)
         c.save()
 
     def addProductToCart(self, product, quantity):
-        cart(self.cart).addProduct(product, quantity)
+        self.cart.addProduct(product, quantity)
 
     def addBillingAddress(self, billingaddress):
         try:
