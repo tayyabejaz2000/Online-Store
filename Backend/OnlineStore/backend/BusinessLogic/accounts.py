@@ -1,48 +1,48 @@
-from rest_framework_simplejwt.tokens import RefreshToken, TokenError
-from .tokenHandler import ObtainToken
-from ..models import Shop, UserAccount, Cart, Wallet
-from ..serializers import AccountsSerializer
+from .account import account
+from .buyer import buyer
+from .seller import seller
+from .tokenHandler import JWTAccountHandeling
 
 
 class accounts:
 
-    def login_user(self):
-        return ObtainToken.as_view()
+    def all(self):
+        return account.all()
 
-    def create_user(self, user_data):
-        serializer = AccountsSerializer(data=user_data)
-        if serializer.is_valid():
-            user = serializer.save()
-            if user:
-                try:
-                    user.save()
-                    if (user.user_type == 'U'):
-                        user_cart = Cart(user=user)
-                        user_cart.save()
-                    elif (user.user_type == 'V'):
-                        shop = Shop(vendor=user, shop_name=user_data.shop_name,
-                                    location=user_data.shop_location)
-                        shop.save()
-                    if (user.user_type == 'U' or user.user_type == 'V'):
-                        wallet = Wallet(user=user)
-                        wallet.set_password(user_data.wallet_password)
-                        wallet.save()
-                    return None
-                except:
-                    raise Exception("Couldn't Create User with data: " +
-                                    str(user_data))
-        raise Exception("Couldn't Create User with data: " + str(user_data))
+    def get(self, *args, **kwargs):
+        return account.get(args, kwargs)
 
-    def logout_user(self, refresh_token):
+    def filter(self, *args, **kwargs):
+        return account.filter(args, kwargs)
+
+    def create_account(self, username, password, email, first_name, last_name, user_type, phone_number):
         try:
-            token = RefreshToken(refresh_token)
-            token.blacklist()
-        except TokenError as e:
-            raise Exception("Invalid Token, [Refresh Token]:" +
-                            str(refresh_token) + ", [Exception]:" + str(e))
+            a = account(username=username, password=password, email=email, first_name=first_name,
+                        last_name=last_name, user_type=user_type, phone_number=phone_number)
+            a.save()
         except:
-            raise Exception("Couldn't Logout User, [Refresh Token]:" +
-                            str(refresh_token))
+            raise Exception("Couldn't create Account")
 
-    def getAccount(self, id):
-        return UserAccount.objects.get(id=id)
+    def create_buyer_account(self, username, password, email, first_name, last_name, user_type, phone_number, wallet_password):
+        try:
+            b = buyer(username=username, password=password, email=email, first_name=first_name,
+                      last_name=last_name, user_type=user_type, phone_number=phone_number, wallet_password=wallet_password)
+            b.save()
+        except:
+            raise Exception("Couldn't create Buyer Account")
+
+    def create_seller_account(self, username, password, email, first_name, last_name, user_type,
+                              phone_number, wallet_password, shop_name, shop_location):
+        try:
+            s = seller(username=username, password=password, email=email, first_name=first_name,
+                       last_name=last_name, user_type=user_type, phone_number=phone_number,
+                       wallet_password=wallet_password, shop_name=shop_name, shop_location=shop_location)
+            s.save()
+        except:
+            raise Exception("Couldn't create Seller Account")
+
+    def login_account(self):
+        return JWTAccountHandeling.login_account()
+
+    def logout_account(self, refresh_token):
+        return JWTAccountHandeling.logout_account(refresh_token)

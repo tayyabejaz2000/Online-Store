@@ -12,7 +12,7 @@ class reviews:
     def filter(self, *args, **kwargs):
         return review.filter(args, kwargs)
 
-    def addReview(self, account, product, stars, feedback):
+    def addReview(self, buyer, product, stars, feedback):
         r = review(stars=stars, feedback=feedback,
-                   product=product, user=account)
+                   product=product, buyer=buyer)
         r.save()

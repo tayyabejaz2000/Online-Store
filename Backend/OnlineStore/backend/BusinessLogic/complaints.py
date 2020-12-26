@@ -4,7 +4,7 @@ from .complaint import complaint
 class complaints:
     def addComplaint(self, user, complaint_body):
         c = complaint(complaint_body=complaint_body,
-                      account=user)
+                      user=user)
         c.save()
 
     def all(self):
@@ -16,5 +16,6 @@ class complaints:
     def filter(self, *args, **kwargs):
         return complaint.filter(args, kwargs)
 
-    def resolveComplaint(self, complaint: complaint, account, response):
-        complaint.resolve(account, response)
+    def resolveComplaint(self, complaint_id, employee, response):
+        c = complaint(self.get(pk=complaint_id))
+        c.resolve(employee, response)

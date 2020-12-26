@@ -8,6 +8,3 @@ class employee(account):
             self = args[0]
         else:
             super().__init__(*args, **kwargs)
-
-    def resolveComplaint(self, comp: complaint, response: str):
-        comp.resolve(self, response)

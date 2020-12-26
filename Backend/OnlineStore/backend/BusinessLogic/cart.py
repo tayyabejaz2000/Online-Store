@@ -20,8 +20,9 @@ class cart(Cart):
         cart_products = self.cartProducts.all()
         for cart_product in cart_products:
             prod = product(cart_product.product)
-            net += cart_product.quantity * (prod.price -
-                                            (prod.price * (prod.discount/100)))
+            if (cart_product.quantity <= prod.stock):
+                net += cart_product.quantity * (prod.price -
+                                                (prod.price * (prod.discount/100)))
         return net
 
     def addProduct(self, product, quantity):

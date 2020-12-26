@@ -21,8 +21,8 @@ urlpatterns = [
     path('user/add-to-cart', AddProductToCart.as_view()),
     path('user/add-billing-address', AddBillingAddress.as_view()),
 
-    path('vendor/set-shop', EditShop.as_view()),
-    path('vendor/add-product', AddProduct.as_view()),
-    path('vendor/remove-product', RemoveProduct.as_view()),
-    path('vendor/update-product', UpdateProduct.as_view()),
+    path('seller/set-shop', EditShop.as_view()),
+    path('seller/add-product', AddProduct.as_view()),
+    path('seller/remove-product', RemoveProduct.as_view()),
+    path('seller/update-product', UpdateProduct.as_view()),
 ]

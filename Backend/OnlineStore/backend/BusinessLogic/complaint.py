@@ -21,9 +21,9 @@ class complaint(Complaint):
     def filter(*args, **kwargs):
         return Complaint.objects.filter(args, kwargs)
 
-    def resolve(self, account, response: str):
+    def resolve(self, employee, response: str):
         try:
-            self.lookup_employee = account
+            self.lookup_employee = employee
             self.answer_body = response
             self.save()
         except:

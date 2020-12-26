@@ -1,3 +1,4 @@
+from Backend.OnlineStore.backend.BusinessLogic.buyer import buyer
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MaxValueValidator
@@ -6,11 +7,11 @@ from django.contrib.auth.hashers import make_password, check_password
 
 class UserAccount(AbstractUser):
     phone_number = models.CharField(max_length=12, null=True)
-    user_type = models.CharField(max_length=2, default='U', null=False, choices=[
-        ('V', 'Vendor'),  # Normal Vendor
-        ('U', 'User'),  # Normal User
+    user_type = models.CharField(max_length=2, default='B', null=False, choices=[
+        ('S', 'Seller'),  # Normal Seller
+        ('B', 'Buyer'),  # Normal Buyere
         ('E', 'Employee'),  # Employee working in Store, can solve complaints
-        ('A', 'Admin'),  # Admins can add/remove any account(employee, vendor, user)
+        ('A', 'Admin'),  # Admins can add/remove any account(employee, seller, buyer)
     ])
 
     class Meta:
@@ -21,17 +22,20 @@ class UserAccount(AbstractUser):
 
 
 class BillingAddress(models.Model):
-    user = models.ForeignKey(UserAccount, on_delete=models.CASCADE,
-                             limit_choices_to={'user_type': 'U'}, related_name='billing_addresses')
+    buyer = models.ForeignKey(UserAccount, on_delete=models.CASCADE,
+                              limit_choices_to={'user_type': 'B'}, related_name='billing_addresses')
     billingAddress = models.CharField(max_length=512, null=False)
 
+    class Meta:
+        unique_together = ('buyer', 'billingAddress')
+
     def __str__(self):
-        return self.user.username
+        return self.buyer.username
 
 
 class Wallet(models.Model):
     user = models.OneToOneField(UserAccount, on_delete=models.CASCADE,
-                                limit_choices_to={'user_type': 'U'}, related_name='wallet')
+                                related_name='wallet')
     balance = models.PositiveIntegerField(default=0)
     wallet_password = models.CharField(max_length=128, null=True, default=None)
 
@@ -43,13 +47,13 @@ class Wallet(models.Model):
 
 
 class Shop(models.Model):
-    vendor = models.OneToOneField(
-        UserAccount, on_delete=models.CASCADE, limit_choices_to={'user_type': 'V'}, related_name='shop')
-    shop_name = models.CharField(max_length=30)
+    seller = models.OneToOneField(
+        UserAccount, on_delete=models.CASCADE, limit_choices_to={'user_type': 'S'}, related_name='shop')
+    name = models.CharField(max_length=30)
     location = models.CharField(max_length=200)
 
     def __str__(self):
-        return self.shop_name + ':' + self.vendor.username
+        return self.name + ':' + self.seller.username
 
 
 class Category(models.Model):
@@ -74,13 +78,13 @@ class Product(models.Model):
 
 
 class Cart(models.Model):
-    user = models.OneToOneField(UserAccount, on_delete=models.CASCADE,
-                                related_name='cart')
+    buyer = models.OneToOneField(UserAccount, on_delete=models.CASCADE,
+                                 limit_choices_to={'user_type': 'B'}, related_name='cart')
     products = models.ManyToManyField(Product, through='CartProduct',
                                       through_fields=('cart', 'product',))
 
     def __str__(self):
-        return self.user.username
+        return self.buyer.username
 
 
 class CartProduct(models.Model):
@@ -101,8 +105,8 @@ class Invoice(models.Model):
 
 
 class Order(models.Model):
-    account = models.ForeignKey(UserAccount, on_delete=models.CASCADE,
-                                limit_choices_to={'user_type': 'U'}, related_name='orders')
+    buyer = models.ForeignKey(UserAccount, on_delete=models.CASCADE,
+                              limit_choices_to={'user_type': 'B'}, related_name='ordes')
     created_on = models.DateTimeField(auto_now_add=True)
     invoice = models.OneToOneField(
         Invoice, on_delete=models.CASCADE, related_name='order')
@@ -134,8 +138,8 @@ class OrderedProduct(models.Model):
 class Complaint(models.Model):
     complaint_body = models.CharField(max_length=512)
     answer_body = models.CharField(max_length=512, null=True, default=None)
-    account = models.ForeignKey(UserAccount, on_delete=models.CASCADE,
-                                limit_choices_to={'user_type': ['U', 'V']}, related_name='complaints')
+    user = models.ForeignKey(UserAccount, on_delete=models.CASCADE,
+                             related_name='complaints')
     lookup_employee = models.ForeignKey(UserAccount, on_delete=models.CASCADE, null=True, default=None,
                                         limit_choices_to={'user_type': 'E'}, related_name='lookup_complaints')
 
@@ -146,5 +150,5 @@ class Review(models.Model):
     feedback = models.CharField(max_length=512)
     product = models.ForeignKey(Product, on_delete=models.CASCADE,
                                 related_name='reviews')
-    user = models.ForeignKey(UserAccount, on_delete=models.CASCADE,
-                             related_name='reviews')
+    buyer = models.ForeignKey(UserAccount, on_delete=models.CASCADE,
+                              related_name='reviews')

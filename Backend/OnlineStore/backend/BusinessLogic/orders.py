@@ -1,28 +1,29 @@
-from ..models import BillingAddress, Invoice, UserAccount, Order, OrderedProduct, Shipping
-from .user import user
+from .order import order
+from .buyer import buyer
+from .product import product
+from .invoice import invoice
+from .orderedproduct import orderedproduct
+from .billingaddress import billingAddress
 
 
 class orders:
-    def placeOrder(self, User: user, discount: int, billingAddress: BillingAddress):
-        cart = User.getCart()
-        wallet = User.getWallet()
-        netTotal = cart.netTotal
-        invoice = Invoice(net=netTotal, discount=discount)
-        if (invoice.total > wallet.balance):
-            raise Exception("Account Balance is low. Recharge Now")
-        User.removeBalance(invoice.total)
-        order = Order(account=User.account, invoice=invoice)
-        invoice.save()
-        order.save()
-        cartProducts = cart.cart_products.all()
-        for cartProduct in cartProducts:
-            product = cartProduct.product
-            if (cartProduct.quantity <= product.stock):
-                shipping = Shipping(address=billingAddress)
-                op = OrderedProduct(product=product, quantity=cartProduct.quantity,
-                                    order=order, shipping=shipping)
-                product.stock -= cartProduct.quantity
-                product.save()
-                shipping.save()
-                op.save()
-                cartProduct.delete()
+    def placeOrder(self, buyer: buyer, discount: int, billingAddress: billingAddress):
+        cart = buyer.Cart
+        wallet = buyer.Wallet
+        net = cart.netTotal
+        i = invoice(net=net, discount=discount)
+        if (wallet.balance < net):
+            raise Exception("Wallet low on Balance, Recharge")
+        i.save()
+        o = order(buyer=buyer, invoice=i, address=billingAddress)
+        o.save()
+        cart_products = cart.cartProducts
+        for cart_product in cart_products:
+            prod = product(cart_product.product)
+            if(prod.removeStock(cart_product.quantity)):
+                cart.removeProduct(prod)
+                orderedProduct = orderedproduct(order=o, product=prod,
+                                                quantity=cart_product.quantity)
+                orderedProduct.save()
+
+        wallet.removeBalance(net)

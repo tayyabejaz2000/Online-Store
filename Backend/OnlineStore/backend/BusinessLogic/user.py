@@ -8,6 +8,11 @@ class user(account):
             self = args[0]
         else:
             super().__init__(*args, **kwargs)
+            w = wallet(user=self)
+            wallet_password = kwargs.pop("wallet_password", None)
+            if wallet_password is not None:
+                w.set_password(wallet_password)
+            w.save()
 
     @property
     def Wallet(self) -> wallet:

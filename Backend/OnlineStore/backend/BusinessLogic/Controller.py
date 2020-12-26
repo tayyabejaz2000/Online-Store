@@ -1,9 +1,11 @@
-from .complaints import complaints
 from .accounts import accounts
-from .products import products
+from .employee import employee
 from .user import user
-from .vendor import vendor
+from .buyer import buyer
+from .seller import seller
+from .products import products
 from .orders import orders
+from .complaints import complaints
 
 
 class Store:
@@ -15,112 +17,108 @@ class Store:
 
     # accounts.py functions
 
-    def login_user(self):
-        return self.accounts.login_user()
+    def login_account(self):
+        return self.accounts.login_account()
 
-    def create_user(self, user_data):
-        self.accounts.create_user(user_data)
+    def create_account(self, user_data):
+        if user_data.user_type == 'B':
+            self.accounts.create_buyer_account(user_data.username, user_data.password, user_data.email,
+                                               user_data.first_name, user_data.last_name, user_data.user_type,
+                                               user_data.phone_number, user_data.wallet_password)
+        elif user_data.user_type == 'S':
+            self.accounts.create_seller_account(user_data.username, user_data.password, user_data.email,
+                                                user_data.first_name, user_data.last_name, user_data.user_type,
+                                                user_data.phone_number, user_data.wallet_password, user_data.shop_name,
+                                                user_data.shop_location)
+        else:
+            self.accounts.create_account(user_data.username, user_data.password, user_data.email,
+                                         user_data.first_name, user_data.last_name, user_data.user_type,
+                                         user_data.phone_number)
 
-    def logout_user(self, token):
-        self.accounts.logout_user(token)
+    def logout_account(self, token):
+        self.accounts.logout_account(token)
 
     def getAccountData(self, account_id):
-        account = self.accounts.getAccount(account_id)
+        a = self.accounts.get(pk=account_id)
         return {
-            "username": account.username,
-            "accountType": account.user_type,
+            "username": a.username,
+            "user_type": a.user_type,
         }
 
     # user.py functions
 
-    def addBillingAddress(self, account_id, address):
-        account = self.accounts.getAccount(account_id)
-        User = user(account)
-        User.addBillingAddress(address)
+    def addBillingAddress(self, buyer_id, address):
+        a = buyer(self.accounts.get(pk=buyer_id))
+        a.addBillingAddress(address)
 
-    def getCart(self, account_id):
-        account = self.accounts.getAccount(account_id)
-        User = user(account)
-        cart = User.getCart()
-        return cart
+    def addProductToCart(self, buyer_id, product_id, quantity):
+        b = buyer(self.accounts.get(pk=buyer_id))
+        p = self.products.get(pk=product_id)
+        b.addProductToCart(p, quantity)
 
-    def addProductToCart(self, account_id, product_id, quantity):
-        account = self.accounts.getAccount(account_id)
-        product = self.products.getProduct(product_id)
-        User = user(account)
-        User.addProductToCart(product, quantity)
-
-    def addBalance(self, account_id, balance, password):
-        account = self.accounts.getAccount(account_id)
-        User = user(account)
-        if User.authWallet(password):
-            User.addBalance(balance=balance)
+    def addBalance(self, user_id, balance, wallet_password):
+        u = user(self.accounts.get(pk=user_id))
+        if u.Wallet.authWallet(wallet_password):
+            u.addBalance(balance)
         else:
             raise Exception("Invalid Wallet Password!")
 
-    def removeBalance(self, account_id, balance, password):
-        account = self.accounts.getAccount(account_id)
-        User = user(account)
-        if User.authWallet(password):
-            User.removeBalance(balance=balance)
+    def removeBalance(self, user_id, balance, wallet_password):
+        u = user(self.accounts.get(pk=user_id))
+        if u.Wallet.authWallet(wallet_password):
+            u.removeBalance(balance)
         else:
             raise Exception("Invalid Wallet Password!")
 
-    # vendor.py functions
+    # seller.py functions
 
-    def editShop(self, account_id, shop_name, shop_location):
-        account = self.accounts.getAccount(account_id)
-        Vendor = vendor(account)
-        Vendor.editShop(shop_name, shop_location)
+    def editShop(self, seller_id, shop_name, shop_location):
+        s = seller(self.accounts.get(pk=seller_id))
+        s.editShop(shop_name, shop_location)
 
-    def getShop(self, account_id):
-        account = self.accounts.getAccount(account_id)
-        Vendor = vendor(account)
-        return Vendor.getShop()  # confirm return
+    def getShop(self, seller_id):
+        s = seller(self.accounts.get(pk=seller_id))
+        return dict(s.Shop)
 
     # products.py functions
 
-    def addProduct(self, account_id, product_name, product_desc, quantity, category, price):
-        account = self.accounts.getAccount(account_id)
-        Vendor = vendor(account)
-        shop = Vendor.getShop()
-        self.products.addProduct(product_name, product_desc, quantity,
-                                 category, shop, price)
+    def addProduct(self, seller_id, product_name, product_desc, quantity, price, discount, category_name):
+        s = seller(self.accounts.get(pk=seller_id))
+        self.products.addProduct(product_name, product_desc, quantity, price,
+                                 discount, category_name, s)
 
     def removeProduct(self, product_id):
         self.products.removeProduct(product_id)
 
     def getAllProducts(self):
-        products = self.products.getAllProducts()
+        products = self.products.all()
         return {"products": products}
 
-    def updateProduct(self, product_id, product_name, product_desc, quantity, category, price):
-        self.products.updateProduct(product_id, product_name,
-                                    product_desc, quantity, category, price)
+    def updateProduct(self, product_id, product_name, product_desc, quantity, price, discount, category_name):
+        self.products.updateProduct(product_id, product_name, product_desc, quantity,
+                                    price, discount, category_name)
 
-    def addReview(self, account_id, product_id, stars, feedback):
-        account = self.accounts.getAccount(account_id)
-        product = self.products.getProduct(product_id)
-        self.products.addReview(account, product, stars, feedback)
+    def addReview(self, buyer_id, product_id, stars, feedback):
+        b = buyer(self.accounts.get(pk=buyer_id))
+        self.products.addReview(b, product_id, stars, feedback)
 
     # complaints.py
-    def addComplaint(self, account_id, complaint_body):
-        account = self.accounts.getAccount(account_id)
-        self.complaints.addComplaint(account, complaint_body)
+    def addComplaint(self, user_id, complaint_body):
+        u = user(self.accounts.get(pk=user_id))
+        self.complaints.addComplaint(u, complaint_body)
 
     def getAllComplaints(self):
-        return self.complaints.getAllComplaints()
+        return self.complaints.all()
 
-    def resolveComplaint(self, complaint_id, account_id, response):
-        account = self.accounts.getAccount(account_id)
-        self.complaints.resolveComplaint(complaint_id, account, response)
+    def resolveComplaint(self, complaint_id, employee_id, response):
+        e = employee(self.accounts.get(pk=employee_id))
+        self.complaints.resolveComplaint(complaint_id, e, response)
 
     # orders.py
 
     # Controller Functions
 
-    def getComplaints(self, account_id):
-        account = self.accounts.getAccount(account_id)
-        return account.complaints
-
+    def getComplaints(self, user_id):
+        u = user(self.accounts.get(pk=user_id))
+        return u.Complaints
     # Add Rest Created Functions in Controller
