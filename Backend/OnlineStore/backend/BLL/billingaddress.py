@@ -7,3 +7,6 @@ class billingAddress:
             self.data = args[0]
         else:
             self.data = BillingAddressModel(args, kwargs)
+
+    def save(self):
+        self.data.save()

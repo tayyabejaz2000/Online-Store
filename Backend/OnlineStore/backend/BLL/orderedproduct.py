@@ -7,3 +7,6 @@ class orderedproduct(OrderedProductModel):
             self.data = args[0]
         else:
             self.data = OrderedProductModel(*args, **kwargs)
+
+    def save(self):
+        self.data.save()

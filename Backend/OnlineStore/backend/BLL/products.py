@@ -49,3 +49,6 @@ class products:
 
     def addCategory(self, category_name):
         self.categories.addCategory(category_name)
+
+    def save(self):
+        self.data.save()

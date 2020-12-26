@@ -19,5 +19,5 @@ class wallet(WalletModel):
         self.balance -= balance
         self.save()
 
-    class Meta:
-        abstract = True
+    def save(self):
+        self.data.save()

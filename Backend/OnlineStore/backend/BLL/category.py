@@ -26,3 +26,6 @@ class category:
     def setName(self, value):
         self.data.name = value
     name = property(getName, setName)
+
+    def save(self):
+        self.data.save()

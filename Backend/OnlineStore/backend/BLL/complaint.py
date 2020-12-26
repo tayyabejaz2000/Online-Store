@@ -55,3 +55,6 @@ class complaint:
             self.save()
         except:
             raise Exception("Couldn't Resolve Complaint")
+
+    def save(self):
+        self.data.save()

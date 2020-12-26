@@ -19,3 +19,6 @@ class review(ReviewModel):
     @staticmethod
     def filter(*args, **kwargs):
         return ReviewModel.objects.filter(*args, **kwargs)
+
+    def save(self):
+        self.data.save()

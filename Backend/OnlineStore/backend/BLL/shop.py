@@ -19,3 +19,6 @@ class shop(ShopModel):
             self.save()
         except:
             raise Exception("Couldn't Edit Shop Object")
+
+    def save(self):
+        self.data.save()

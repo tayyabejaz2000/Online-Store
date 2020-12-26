@@ -18,3 +18,6 @@ class order:
                 o.save()
         except:
             raise Exception("Couldn't Add Product to Order")
+
+    def save(self):
+        self.data.save()

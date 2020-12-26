@@ -25,3 +25,6 @@ class invoice:
     def setDiscount(self, value):
         self.data.discount = value
     discount = property(getDiscount, setDiscount)
+
+    def save(self):
+        self.data.save()

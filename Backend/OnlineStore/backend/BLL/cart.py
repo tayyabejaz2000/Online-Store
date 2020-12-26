@@ -48,3 +48,6 @@ class cart:
             self.cartProducts.filter(product=product).delete()
         except:
             raise Exception("Couldn't delete Cart Product")
+
+    def save(self):
+        self.data.save()

@@ -109,3 +109,6 @@ class product:
     shop = property(getshop, setshop)
     category = property(getcategory, setcategory)
     isRemoved = property(getisRemoved, setisRemoved)
+
+    def save(self):
+        self.data.save()

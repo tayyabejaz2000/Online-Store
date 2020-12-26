@@ -37,3 +37,6 @@ class cartproduct:
         self.data.quantity = value
 
     quantity = property(getQuantity, setQuantity)
+
+    def save(self):
+        self.data.save()
