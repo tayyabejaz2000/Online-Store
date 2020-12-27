@@ -75,18 +75,6 @@ class ProductModel(models.Model):
     def __str__(self):
         return self.name + ":" + self.category.name
 
-    def __dict__(self):
-        return {
-            "name": self.name,
-            "description": self.description,
-            "stock": self.stock,
-            "price": self.price,
-            "discount": self.discount,
-            "shop": self.shop.pk,
-            "category": self.category.name,
-            "isRemoved": self.isRemoved,
-        }
-
 
 class CartModel(models.Model):
     buyer = models.OneToOneField(AccountModel, on_delete=models.CASCADE,

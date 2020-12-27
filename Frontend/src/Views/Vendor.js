@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
 	Fab,
 	Grid,
@@ -8,9 +8,14 @@ import {
 import AddIcon from '@material-ui/icons/Add';
 import VendorProductCard from '../Components/VendorProductCard'
 import { vendorStyles } from '../MUI-Styles/Styles'
+import { getVendorProducts } from '../Utilities/vendorUtilities';
 
 export default function Vendor(props) {
 	const classes = vendorStyles()
+	const [products, setProducts] = useState([])
+	const [query, setQuery] = useState(false)
+	if (!query)
+		getVendorProducts(setProducts, setQuery)
 	return (
 		<React.Fragment>
 			<Grid
@@ -27,28 +32,20 @@ export default function Vendor(props) {
 						</Typography>
 				</Grid>
 
-				<Grid item>
-					<VendorProductCard productName="Product 1" category="House Products" price="$56.32" quantity="20" />
-				</Grid>
-				<Grid item>
-					<VendorProductCard productName="Product 2" category="House Products" price="$20.95" quantity="1200" />
-				</Grid>
-				<Grid item>
-					<VendorProductCard productName="Product 3" category="Food Products" price="$20.95" quantity="1200" />
-				</Grid>
-				<Grid item>
-					<VendorProductCard productName="Product 4" category="Food Products" price="$20.95" quantity="1200" />
-				</Grid>
-				<Grid item>
-					<VendorProductCard productName="Product 5" category="Health Products" price="$20.95" quantity="1200" />
-				</Grid>
-				<Grid item>
-					<VendorProductCard productName="Product 6" category="Baby Products" price="$20.95" quantity="1200" />
-				</Grid>
+				{
+					products.map((value) => {
+						console.log(value)
+						return (
+							<Grid item>
+								<VendorProductCard product_id={value.id} productName={value.name} category={value.category_id} price={value.price} discount={value.discount} />
+							</Grid>
+					)})
+				}
+				
 				
 				<Grid container item justify="center">
 					<Tooltip title="Add Product">
-						<Fab variant="extended">
+						<Fab variant="extended" onClick={() => {window.location.href = "/vendor/addproduct/"}}>
 								<AddIcon />
 								Add a Product
 						</Fab>

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
 	IconButton,
 	Tooltip,
@@ -9,8 +9,12 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit'
 
 import ProductCard from './ProductCard'
+import {
+	deleteProduct
+} from '../Utilities/vendorUtilities'
 
 function VendorProductCard(props) {
+	const [deleted, setDeleted] = useState(false)
 	const controlButtons = (
 		<Grid
 			container
@@ -19,7 +23,7 @@ function VendorProductCard(props) {
 		>
 			<Grid item>
 				<Tooltip title="Remove">
-					<IconButton>
+					<IconButton onClick={() => { deleteProduct(props.product_id); setDeleted(true) }}>
 						<DeleteIcon color="error"/>
 					</IconButton>
 				</Tooltip>
@@ -33,9 +37,17 @@ function VendorProductCard(props) {
 			</Grid>
 		</Grid>
 	)
-	return (
-		<ProductCard productName={props.productName} category={props.category} price={props.price} quantity={props.quantity} control_buttons={controlButtons} onClick={props.onClick}/>
-	)
+	if (!deleted) {
+		return (
+			<ProductCard productName={props.productName} category={props.category} price={props.price} discount={props.discount} control_buttons={controlButtons} onClick={props.onClick}/>
+			)
+	}
+	else {
+		return (
+			<React.Fragment>
+			</React.Fragment>
+		)
+	}
 }
 
 export default VendorProductCard

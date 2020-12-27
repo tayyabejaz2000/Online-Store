@@ -59,14 +59,12 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),  # TTL for Access Token
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),  # TTL for Access Token
     'REFRESH_TOKEN_LIFETIME': timedelta(days=14),  # TTL for Refresh Token
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': False,
@@ -81,9 +79,11 @@ SIMPLE_JWT = {
 }
 
 CORS_ORIGIN_ALLOW_ALL = True
-# CORS_ORIGIN_WHITELIST = (
-#    'https://localhost:3000',
-# )
+CORS_ORIGIN_WHITELIST = (
+    'https://localhost:3000',
+)
+
+ALLOWED_HOSTS = ["*"]
 
 ROOT_URLCONF = 'OnlineStore.urls'
 

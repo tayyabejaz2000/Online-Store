@@ -6,26 +6,36 @@ import {
 	CardHeader,
 	Typography,
 } from '@material-ui/core'
-import { productCardStyles } from '../MUI-Styles/Styles'
 
 
 function ProductCard(props) {
-	const classes = productCardStyles()
+	let price = null
+	if (props.discount === 0) {
+		price = (
+			<Typography variant="body 2" component="p">
+				Price: {props.price}
+			</Typography>
+		)
+	}
+	else {
+		price = (
+			<React.Fragment>
+				<Typography variant="subtitle1" component="p">
+					Price:
+					<strike>{props.price}</strike> {props.price - (props.price * (props.discount/100))}
+				</Typography>
+			</React.Fragment>
+		)
+	}
 	return (
-		<Card variant="outlined" className={classes.root}>
+		<Card variant="outlined">
 			<CardActionArea onClick={props.onClick}>
-				<img src="https://picsum.photos/305/200" alt="null"/>
 				<CardHeader
 					title={"Name: " + props.productName}
 					subheader={"Category: " + props.category}
 					/>
 				<CardContent>
-					<Typography variant="body2" component="p">
-						Price: {props.price}
-					</Typography>
-					<Typography variant="body 2" component="p">
-						Stock Left: {props.quantity}
-					</Typography>
+					{price}
 				</CardContent>
 			</CardActionArea>
 			{props.control_buttons}

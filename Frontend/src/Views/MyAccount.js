@@ -8,6 +8,7 @@ import { getAccountData } from '../Utilities/accountUtilities'
 
 function MyAccount() {
 	let accountData = getAccountData()
+	console.log(accountData)
 	return (
 		<Container>
 			<Grid
@@ -19,8 +20,6 @@ function MyAccount() {
 						My Account
 					</Typography>
 					<Typography component="p" variant="h3">
-						{accountData.username}
-						{accountData.user_type}
 					</Typography>
 				</Grid>
 			</Grid>

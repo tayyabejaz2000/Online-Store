@@ -30,7 +30,7 @@ export default function Login(props) {
 		initialValues:{
 			username: '',
 			password: '',
-			rememberMe: false,
+			rememberMe: true,
 		},
 		onSubmit: login,
 	})
@@ -75,7 +75,7 @@ export default function Login(props) {
 							onChange={formik.handleChange}
 						/>
 						<FormControlLabel
-							control={<Checkbox value={formik.values.rememberMe} onChange={()=>{formik.setFieldValue("rememberMe", !formik.values.rememberMe)}}/>}
+							control={<Checkbox checked={formik.values.rememberMe} onChange={()=>{formik.setFieldValue("rememberMe", !formik.values.rememberMe)}}/>}
 							label="Remember me"
 						/>
 						<Grid

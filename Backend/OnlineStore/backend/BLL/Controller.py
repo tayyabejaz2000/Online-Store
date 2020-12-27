@@ -80,6 +80,12 @@ class Store:
         s = seller(self.accounts.get(pk=seller_id))
         return s.shop.__dict__()
 
+    def getSellerProducts(self, seller_id):
+        s = seller(self.accounts.get(pk=seller_id))
+        products = s.shop.products
+        return {
+            "products": list(products.filter(isRemoved=False).values())
+        }
     # products.py functions
 
     def addProduct(self, seller_id, product_name, product_desc, quantity, price, discount, category_name):
@@ -120,3 +126,9 @@ class Store:
         u = user(account(self.accounts.get(pk=user_id)))
         return u.complaints
     # Add Rest Created Functions in Controller
+
+    def getAllCategories(self):
+        categories = self.products.categories.all()
+        return {
+            "categories": list(categories.values())
+        }

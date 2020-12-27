@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .BLL.Controller import Store
 
+
 # Views just forward all calls to Controller
 controller = Store()
 
@@ -14,7 +15,6 @@ class Login:
 
 class Signup(APIView):
     permission_classes = (permissions.AllowAny,)
-    authentication_classes = ()
 
     def post(self, request):
         try:
@@ -27,7 +27,6 @@ class Signup(APIView):
 
 class Logout(APIView):
     permission_classes = (permissions.AllowAny,)
-    authentication_classes = ()
 
     def post(self, request):
         try:
@@ -40,7 +39,6 @@ class Logout(APIView):
 
 class GetUserData(APIView):
     permission_classes = (permissions.IsAuthenticated,)
-    authentication_classes = ()
 
     def post(self, request):
         try:
@@ -53,7 +51,6 @@ class GetUserData(APIView):
 
 class AddBillingAddress(APIView):
     permission_classes = (permissions.IsAuthenticated,)
-    authentication_classes = ()
 
     def post(self, request):
         try:
@@ -67,7 +64,6 @@ class AddBillingAddress(APIView):
 
 class EditShop(APIView):
     permission_classes = (permissions.IsAuthenticated,)
-    authentication_classes = ()
 
     def post(self, request):
         try:
@@ -81,7 +77,6 @@ class EditShop(APIView):
 
 class AddProduct(APIView):
     permission_classes = (permissions.IsAuthenticated,)
-    authentication_classes = ()
 
     def post(self, request):
         try:
@@ -102,7 +97,6 @@ class AddProduct(APIView):
 
 class RemoveProduct(APIView):
     permission_classes = (permissions.IsAuthenticated,)
-    authentication_classes = ()
 
     def post(self, request):
         try:
@@ -115,7 +109,6 @@ class RemoveProduct(APIView):
 
 class GetAllProducts(APIView):
     permission_classes = (permissions.AllowAny,)
-    authentication_classes = ()
 
     def post(self, request):
         try:
@@ -128,7 +121,6 @@ class GetAllProducts(APIView):
 
 class UpdateProduct(APIView):
     permission_classes = (permissions.IsAuthenticated,)
-    authentication_classes = ()
 
     def post(self, request):
         try:
@@ -148,13 +140,36 @@ class UpdateProduct(APIView):
 
 class AddProductToCart(APIView):
     permission_classes = (permissions.IsAuthenticated,)
-    authentication_classes = ()
 
     def post(self, request):
         try:
             controller.addProductToCart(
                 request.data.id, request.data["product_id"], request.data["quantity"])
             return Response(status=status.HTTP_201_CREATED)
+        except Exception as e:
+            print("Exception Thrown", e)  # Log Error
+            return Response(data=str(e), status=status.HTTP_400_BAD_REQUEST)
+
+
+class GetSellerProducts(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def post(self, request):
+        try:
+            products = controller.getSellerProducts(request.user.id)
+            return Response(data=products, status=status.HTTP_200_OK)
+        except Exception as e:
+            print("Exception Thrown", e)  # Log Error
+            return Response(data=str(e), status=status.HTTP_400_BAD_REQUEST)
+
+
+class GetAllCategories(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def post(self, request):
+        try:
+            categories = controller.getAllCategories()
+            return Response(data=categories, status=status.HTTP_200_OK)
         except Exception as e:
             print("Exception Thrown", e)  # Log Error
             return Response(data=str(e), status=status.HTTP_400_BAD_REQUEST)

@@ -61,7 +61,7 @@ function Signup(props) {
 					id="shop_name"
 					label="Shop Name"
 					name="shop_name"
-					value={formik.values.seller.shop_name}
+					value={formik.values.shop_name}
 					onChange={formik.handleChange}
 				/>
 				<TextField
@@ -72,7 +72,7 @@ function Signup(props) {
 					id="shop_location"
 					label="Shop Location"
 					name="shop_location"
-					value={formik.values.seller.shop_location}
+					value={formik.values.shop_location}
 					onChange={formik.handleChange}
 				/>
 			</React.Fragment>
