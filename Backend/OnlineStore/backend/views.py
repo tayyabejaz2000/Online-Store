@@ -44,7 +44,7 @@ class GetUserData(APIView):
 
     def post(self, request):
         try:
-            userdata = controller.getAccountData(request.data.id)
+            userdata = controller.getAccountData(request.user.id)
             return Response(data=userdata, status=status.HTTP_200_OK)
         except Exception as e:
             print("Exception Throw: ", e)  # Log Error
@@ -57,7 +57,8 @@ class AddBillingAddress(APIView):
 
     def post(self, request):
         try:
-            controller.addBillingAddress(request.data.id, request.data.address)
+            controller.addBillingAddress(
+                request.user.id, request.data["address"])
             return Response(status=status.HTTP_201_CREATED)
         except Exception as e:
             print("Exception Thrown: ", e)  # Log error
@@ -70,8 +71,8 @@ class EditShop(APIView):
 
     def post(self, request):
         try:
-            controller.editShop(request.data.id, request.data.shop_name,
-                                request.data.shop_location)
+            controller.editShop(request.user.id, request.data["shop_name"],
+                                request.data["shop_location"])
             return Response(status=status.HTTP_201_CREATED)
         except Exception as e:
             print("Exception Thrown: ", e)  # Log error
@@ -85,13 +86,13 @@ class AddProduct(APIView):
     def post(self, request):
         try:
 
-            controller.addProduct(request.data.id,
-                                  request.data.product_name,
-                                  request.data.product_desc,
-                                  int(request.data.quantity),
-                                  int(request.data.price),
-                                  int(request.data.discount),
-                                  request.data.category
+            controller.addProduct(request.user.id,
+                                  request.data["product_name"],
+                                  request.data["product_desc"],
+                                  int(request.data["quantity"]),
+                                  int(request.data["price"]),
+                                  int(request.data["discount"]),
+                                  request.data["category"]
                                   )
             return Response(status=status.HTTP_201_CREATED)
         except Exception as e:
@@ -105,7 +106,7 @@ class RemoveProduct(APIView):
 
     def post(self, request):
         try:
-            controller.removeProduct(request.data.product_id)
+            controller.removeProduct(request.data["product_id"])
             return Response(status=status.HTTP_205_RESET_CONTENT)
         except Exception as e:
             print("Exception Thrown: ", e)  # Log error
@@ -131,13 +132,13 @@ class UpdateProduct(APIView):
 
     def post(self, request):
         try:
-            controller.updateProduct(request.data.product_id,
-                                     request.data.product_name,
-                                     request.data.product_desc,
-                                     int(request.data.quantity),
-                                     int(request.data.price),
-                                     int(request.data.discount),
-                                     request.data.category
+            controller.updateProduct(request.data["product_id"],
+                                     request.data["product_name"],
+                                     request.data["product_desc"],
+                                     int(request.data["quantity"]),
+                                     int(request.data["price"]),
+                                     int(request.data["discount"]),
+                                     request.data["category"]
                                      )
             return Response(status=status.HTTP_200_OK)
         except Exception as e:
@@ -152,7 +153,7 @@ class AddProductToCart(APIView):
     def post(self, request):
         try:
             controller.addProductToCart(
-                request.data.id, request.data.product_id, request.data.quantity)
+                request.data.id, request.data["product_id"], request.data["quantity"])
             return Response(status=status.HTTP_201_CREATED)
         except Exception as e:
             print("Exception Thrown", e)  # Log Error

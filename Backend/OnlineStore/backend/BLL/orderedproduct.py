@@ -1,7 +1,7 @@
 from ..models import OrderedProductModel
 
 
-class orderedproduct(OrderedProductModel):
+class orderedproduct:
     def __init__(self, *args, **kwargs):
         if len(args) > 0 and isinstance(args[0], OrderedProductModel):
             self.data = args[0]

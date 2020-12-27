@@ -11,9 +11,9 @@ class user(account):
             super().__init__(*args, **kwargs)
 
     def create_wallet(self, wallet_password):
-        w = wallet(user=self)
+        w = wallet(user=self.data)
         if wallet_password is not None:
-            w.set_password(wallet_password)
+            w.data.set_password(wallet_password)
         w.save()
 
     @property

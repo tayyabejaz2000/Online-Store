@@ -16,10 +16,12 @@ import {
 import {
 	loginStyles
 } from "../MUI-Styles/Styles"
+import { signup } from '../Utilities/accountUtilities'
 
 
 
 function Signup(props) {
+	let error = null
 	const classes = loginStyles()
 	const formik = useFormik({
 		initialValues:{
@@ -29,13 +31,53 @@ function Signup(props) {
 			firstName: '',
 			lastName: '',
 			phoneNumber: '',
-			vendorSignup: false,
+			wallet_password: '',
+			shop_name: '',
+			shop_location: '',
+			sellerAccount: false,
 		},
 		onSubmit: (values) => {
-			console.log(values)
+			try {
+				signup(values)
+			}
+			catch {
+				error = (
+					<Typography variant="caption" component="p" color="error">
+						{error.data}
+					</Typography>
+				)
+			}
 		},
 	})
-	
+	let accountRelatedForm = null
+	if (formik.values.sellerAccount) {
+		accountRelatedForm = (
+			<React.Fragment>
+				<TextField
+					variant="outlined"
+					margin="normal"
+					required
+					fullWidth
+					id="shop_name"
+					label="Shop Name"
+					name="shop_name"
+					value={formik.values.seller.shop_name}
+					onChange={formik.handleChange}
+				/>
+				<TextField
+					variant="outlined"
+					margin="normal"
+					required
+					fullWidth
+					id="shop_location"
+					label="Shop Location"
+					name="shop_location"
+					value={formik.values.seller.shop_location}
+					onChange={formik.handleChange}
+				/>
+			</React.Fragment>
+		)
+	}
 	return (
 		<Container component="main" maxWidth="sm">
 			<CssBaseline />
@@ -56,18 +98,6 @@ function Signup(props) {
 							value={formik.values.username}
 							onChange={formik.handleChange}
 							autoFocus
-						/>
-						<TextField
-							variant="outlined"
-							margin="normal"
-							required
-							fullWidth
-							id="password"
-							type="password"
-							label="Password"
-							name="password"
-							value={formik.values.password}
-							onChange={formik.handleChange}
 						/>
 						<TextField
 							variant="outlined"
@@ -122,9 +152,33 @@ function Signup(props) {
 							value={formik.values.phoneNumber}
 							onChange={formik.handleChange}
 						/>
+						<TextField
+							variant="outlined"
+							margin="normal"
+							required
+							fullWidth
+							id="password"
+							type="password"
+							label="Password"
+							name="password"
+							value={formik.values.password}
+							onChange={formik.handleChange}
+						/>
+						<TextField
+							variant="outlined"
+							margin="normal"
+							fullWidth
+							id="wallet_password"
+							type="password"
+							label="Wallet Password"
+							name="wallet_password"
+							value={formik.values.wallet_password}
+							onChange={formik.handleChange}
+						/>
+						{accountRelatedForm}
 						<FormControlLabel
-							control={<Switch checked={formik.values.vendorSignup} value={formik.values.vendorSignup} onChange={() => (formik.setFieldValue('vendorSignup', !formik.values.vendorSignup))} />}
-							label={(formik.values.vendorSignup)? "Vendor Account": "User Account"}
+							control={<Switch checked={formik.values.sellerAccount} value={formik.values.sellerAccount} onChange={() => (formik.setFieldValue('sellerAccount', !formik.values.sellerAccount))} />}
+							label={(formik.values.sellerAccount)? "Seller Account": "Buyer Account"}
 						/>
 						<Grid
 							container
@@ -143,6 +197,7 @@ function Signup(props) {
 								</Button>
 							</Grid>
 						</Grid>
+						{ error }
 					</div>
 				</form>
 			</div>

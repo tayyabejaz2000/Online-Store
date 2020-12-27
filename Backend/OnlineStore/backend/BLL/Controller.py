@@ -21,19 +21,19 @@ class Store:
         return self.accounts.login_account()
 
     def create_account(self, user_data):
-        if user_data.user_type == 'B':
-            self.accounts.create_buyer_account(user_data.username, user_data.password, user_data.email,
-                                               user_data.first_name, user_data.last_name, user_data.user_type,
-                                               user_data.phone_number, user_data.wallet_password)
-        elif user_data.user_type == 'S':
-            self.accounts.create_seller_account(user_data.username, user_data.password, user_data.email,
-                                                user_data.first_name, user_data.last_name, user_data.user_type,
-                                                user_data.phone_number, user_data.wallet_password, user_data.shop_name,
-                                                user_data.shop_location)
+        if user_data["user_type"] == 'B':
+            self.accounts.create_buyer_account(user_data["username"], user_data["password"], user_data["email"],
+                                               user_data["first_name"], user_data["last_name"], user_data["user_type"],
+                                               user_data["phone_number"], user_data["wallet_password"])
+        elif user_data["user_type"] == 'S':
+            self.accounts.create_seller_account(user_data["username"], user_data["password"], user_data["email"],
+                                                user_data["first_name"], user_data["last_name"], user_data["user_type"],
+                                                user_data["phone_number"], user_data["wallet_password"], user_data["shop_name"],
+                                                user_data["shop_location"])
         else:
-            self.accounts.create_account(user_data.username, user_data.password, user_data.email,
-                                         user_data.first_name, user_data.last_name, user_data.user_type,
-                                         user_data.phone_number)
+            self.accounts.create_account(user_data["username"], user_data["password"], user_data["email"],
+                                         user_data["first_name"], user_data["last_name"], user_data["user_type"],
+                                         user_data["phone_number"])
 
     def logout_account(self, token):
         self.accounts.logout_account(token)

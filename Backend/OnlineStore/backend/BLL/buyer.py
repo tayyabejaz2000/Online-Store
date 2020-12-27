@@ -1,8 +1,6 @@
-from ..models import BillingAddressModel
 from .user import user
 from .cart import cart
 from .billingaddress import billingAddress
-import copy
 
 
 class buyer(user):
@@ -10,7 +8,7 @@ class buyer(user):
         if len(args) > 0 and isinstance(args[0], user):
             self.data = args[0].data
         else:
-            super().__init__(*args, *kwargs)
+            super().__init__(*args, **kwargs)
 
     @property
     def cart(self):

@@ -1,7 +1,7 @@
 from ..models import ReviewModel
 
 
-class review(ReviewModel):
+class review:
     def __init__(self, *args, **kwargs):
         if len(args) > 0 and isinstance(args[0], ReviewModel):
             self.data = args[0]

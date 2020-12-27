@@ -1,7 +1,7 @@
 from ..models import WalletModel
 
 
-class wallet(WalletModel):
+class wallet:
     def __init__(self, *args, **kwargs):
         if len(args) > 0 and isinstance(args[0], WalletModel):
             self.data = args[0]

@@ -4,8 +4,10 @@ import {
 	Typography
 } from '@material-ui/core'
 import React from 'react'
+import { getAccountData } from '../Utilities/accountUtilities'
 
 function MyAccount() {
+	let accountData = getAccountData()
 	return (
 		<Container>
 			<Grid
@@ -15,6 +17,10 @@ function MyAccount() {
 				<Grid item>
 					<Typography component="p" variant="h3">
 						My Account
+					</Typography>
+					<Typography component="p" variant="h3">
+						{accountData.username}
+						{accountData.user_type}
 					</Typography>
 				</Grid>
 			</Grid>

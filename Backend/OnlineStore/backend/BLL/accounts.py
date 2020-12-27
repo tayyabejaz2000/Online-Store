@@ -27,9 +27,9 @@ class accounts:
         try:
             b = buyer(username=username, password=password, email=email, first_name=first_name,
                       last_name=last_name, user_type=user_type, phone_number=phone_number)
+            b.save()
             b.create_wallet(wallet_password)
             b.create_cart()
-            b.save()
         except:
             raise Exception("Couldn't create Buyer Account")
 
@@ -38,9 +38,9 @@ class accounts:
         try:
             s = seller(username=username, password=password, email=email, first_name=first_name,
                        last_name=last_name, user_type=user_type, phone_number=phone_number)
+            s.save()
             s.create_wallet(wallet_password)
             s.create_shop(shop_name, shop_location)
-            s.save()
         except:
             raise Exception("Couldn't create Seller Account")
 

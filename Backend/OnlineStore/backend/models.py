@@ -158,7 +158,7 @@ class ComplaintModel(models.Model):
         return {
             "complaint_body": self.complaint_body,
             "answer_body": self.answer_body,
-            "user": self.user,
+            "user": self.user.id,
             "lookup_employee": self.lookup_employee,
         }
 

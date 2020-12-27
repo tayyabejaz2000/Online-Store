@@ -1,5 +1,4 @@
 from ..models import ProductModel
-from .category import category
 
 
 class product:

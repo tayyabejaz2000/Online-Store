@@ -1,7 +1,7 @@
 from ..models import ShopModel
 
 
-class shop(ShopModel):
+class shop:
     def __init__(self, *args, **kwargs):
         if len(args) > 0 and isinstance(args[0], ShopModel):
             self.data = args[0]

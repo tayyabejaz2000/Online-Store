@@ -3,10 +3,14 @@ from ..models import AccountModel
 
 class account:
     def __init__(self, *args, **kwargs):
+        self.data = None
         if len(args) > 0 and isinstance(args[0], AccountModel):
             self.data = args[0]
         else:
-            self.data = AccountModel(args, kwargs)
+            password = kwargs.pop("password", None)
+            self.data = AccountModel(*args, **kwargs)
+            if password is not None:
+                self.data.set_password(password)
 
     @staticmethod
     def all():
