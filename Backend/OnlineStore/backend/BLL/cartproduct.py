@@ -8,6 +8,18 @@ class cartproduct:
         else:
             self.data = CartProductModel(*args, **kwargs)
 
+    @staticmethod
+    def all():
+        return CartProductModel.objects.all()
+
+    @staticmethod
+    def get(*args, **kwargs):
+        return CartProductModel.objects.get(*args, **kwargs)
+
+    @staticmethod
+    def filter(*args, **kwargs):
+        return CartProductModel.objects.filter(*args, **kwargs)
+
     @property
     def price(self):
         return self.data.product.price

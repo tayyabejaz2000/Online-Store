@@ -1,3 +1,4 @@
+from abc import abstractmethod
 from .user import user
 from .cart import cart
 from .billingaddress import billingAddress
@@ -32,6 +33,9 @@ class buyer(user):
 
     def addProductToCart(self, product, quantity):
         self.cart.addProduct(product, quantity)
+
+    def updateCart(self, product, quantity):
+        self.cart.updateProduct(product, quantity)
 
     def addBillingAddress(self, billingaddress):
         try:

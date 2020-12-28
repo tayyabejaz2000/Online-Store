@@ -9,16 +9,21 @@ export function login(values) {
 		username: values.username,
 		password: values.password,
 	})
-	.then((result) => {
+		.then((result) => {
 		axiosInstance.defaults.headers['Authorization'] = "JWT " + result.data.access
 		sessionStorage.removeItem("username")
 		sessionStorage.removeItem("user_type")
 		localStorage.setItem('access_token', result.data.access)
-		getAccountData()
+		let user_data = getAccountData()
 		if (values.rememberMe)
 			localStorage.setItem('refresh_token', result.data.refresh)
 		if (result.status === 200) {
-			window.location.href = "/home"
+			user_data.then((data) => {
+				if (data.user_type === "S")
+					window.location.href = "/vendor"
+				else
+					window.location.href = "/home"
+			})
 		}
 	})
 	.catch((error) => {
@@ -54,12 +59,12 @@ export function signup(values) {
 	})
 }
 
-export function getAccountData() {
+export async function getAccountData() {
 	if (localStorage.getItem("access_token")) {
 		let username = sessionStorage.getItem("username")
 		let user_type = sessionStorage.getItem("user_type")
 		if (!username || !user_type) {
-			axiosInstance.post("/account/min-data")
+			await axiosInstance.post("/account/min-data")
 			.then((result) => {
 				if (result.status === 200) {
 					sessionStorage.setItem("username", result.data.username)
@@ -68,6 +73,7 @@ export function getAccountData() {
 			})
 			.catch((error) => {
 				console.log(error)
+				throw error
 			})
 		}
 	}
@@ -75,4 +81,17 @@ export function getAccountData() {
 		"username": sessionStorage.getItem("username"),
 		"user_type": sessionStorage.getItem("user_type"),
 	}
+}
+
+export async function getAccountDetails() {
+	let details = null
+	await axiosInstance.post('account/data')
+	.then((response) => {
+		details = response.data	
+	})
+	.catch((error) => {
+		console.log(error)
+		throw error
+	})
+	return details
 }

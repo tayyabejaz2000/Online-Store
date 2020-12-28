@@ -11,7 +11,7 @@ import EditIcon from '@material-ui/icons/Edit'
 import ProductCard from './ProductCard'
 import {
 	deleteProduct
-} from '../Utilities/vendorUtilities'
+} from '../Utilities/productsUtilities'
 
 function VendorProductCard(props) {
 	const [deleted, setDeleted] = useState(false)
@@ -30,7 +30,7 @@ function VendorProductCard(props) {
 			</Grid>
 			<Grid item>
 				<Tooltip title="Edit">
-					<IconButton>
+					<IconButton onClick={() => {window.location.href = "/vendor/editproduct/" + props.product_id}}>
 						<EditIcon />
 					</IconButton>
 				</Tooltip>
@@ -39,7 +39,9 @@ function VendorProductCard(props) {
 	)
 	if (!deleted) {
 		return (
-			<ProductCard productName={props.productName} category={props.category} price={props.price} discount={props.discount} control_buttons={controlButtons} onClick={props.onClick}/>
+			<React.Fragment>
+				<ProductCard productName={props.productName} category={props.category} price={props.price} discount={props.discount} control_buttons={controlButtons} onClick={props.onClick}/>
+			</React.Fragment>
 			)
 	}
 	else {

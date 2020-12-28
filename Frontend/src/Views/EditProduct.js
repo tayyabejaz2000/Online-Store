@@ -14,34 +14,40 @@ import { useFormik } from 'formik'
 import {
 	loginStyles as formStyles
 } from "../MUI-Styles/Styles"
-import { addProduct, getAllCategories } from '../Utilities/productsUtilities'
+import { editProduct, getAllCategories, getProduct } from '../Utilities/productsUtilities'
+import { useParams } from 'react-router-dom'
 
-function AddProduct() {
+function EditProduct(props) {
+	const { id } = useParams()
 	const classes = formStyles()
 	const [categories, setCategories] = useState([])
-	const [query, setQuery] = useState(false)
-	if (!query)
-		getAllCategories(setCategories, setQuery)
+	const [cat_query, setCatQuery] = useState(false)
+	if (!cat_query)
+		getAllCategories(setCategories, setCatQuery)
 	const formik = useFormik({
 		initialValues: {
-			product_name: "",
-			product_desc: "",
-			quantity: "",
-			price: "",
-			discount: "",
+			id:  "",
+			name: "",
+			description:  "",
+			stock: "",
+			price:  "",
+			discount:  "",
 			category: "",
 		},
 		onSubmit: (values) => {
-			addProduct(values)
+			editProduct(values)
 			window.location.href = "/vendor/"
 		}
 	})
+	const [prod_query, setProdQuery] = useState(false)
+	if (!prod_query)
+		getProduct(id, formik, setProdQuery)
 	return (
 		<Container component="main" maxWidth="sm">
 			<CssBaseline />
 			<div className={classes.paper}>
 				<Typography component="h1" variant="h5">
-						Add a Product
+						Update Product
 				</Typography>
 				<form onSubmit={formik.handleSubmit}>
 					<div className={classes.form}>
@@ -50,10 +56,10 @@ function AddProduct() {
 							margin="normal"
 							required
 							fullWidth
-							id="product_name"
+							id="name"
 							label="Product Name"
-							name="product_name"
-							value={formik.values.product_name}
+							name="name"
+							value={formik.values.name}
 							onChange={formik.handleChange}
 						/>
 						<TextField
@@ -61,10 +67,10 @@ function AddProduct() {
 							margin="normal"
 							required
 							fullWidth
-							id="product_desc"
+							id="description"
 							label="Product Description"
-							name="product_desc"
-							value={formik.values.product_desc}
+							name="description"
+							value={formik.values.description}
 							onChange={formik.handleChange}
 						/>
 						<TextField
@@ -73,10 +79,10 @@ function AddProduct() {
 							required
 							fullWidth
 							type="number"
-							id="quantity"
+							id="stock"
 							label="Stock"
-							name="quantity"
-							value={formik.values.quantity}
+							name="stock"
+							value={formik.values.stock}
 							onChange={formik.handleChange}
 						/>
 						<Grid
@@ -146,7 +152,7 @@ function AddProduct() {
 									type="submit"
 									size="large"
 								>
-									Add
+									Save
 								</Button>
 							</Grid>
 							<Grid item xs={4}>
@@ -168,4 +174,4 @@ function AddProduct() {
 	)
 }
 
-export default AddProduct
+export default EditProduct

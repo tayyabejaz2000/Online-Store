@@ -4,6 +4,7 @@ import {
 	CardActionArea,
 	CardContent,
 	CardHeader,
+	Grid,
 	Typography,
 } from '@material-ui/core'
 
@@ -12,7 +13,7 @@ function ProductCard(props) {
 	let price = null
 	if (props.discount === 0) {
 		price = (
-			<Typography variant="body 2" component="p">
+			<Typography variant="subtitle1" component="p">
 				Price: {props.price}
 			</Typography>
 		)
@@ -28,6 +29,7 @@ function ProductCard(props) {
 		)
 	}
 	return (
+		<Grid item>
 		<Card variant="outlined">
 			<CardActionArea onClick={props.onClick}>
 				<CardHeader
@@ -40,6 +42,7 @@ function ProductCard(props) {
 			</CardActionArea>
 			{props.control_buttons}
 		</Card>
+		</Grid>
 	)
 }
 

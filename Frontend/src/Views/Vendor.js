@@ -27,25 +27,22 @@ export default function Vendor(props) {
 				className={classes.root}
 			>
 				<Grid container item justify="space-between" alignItems="flex-start">
-						<Typography variant="h4" component="p">
-							Your Products
-						</Typography>
+					<Typography variant="h4" component="p">
+						Your Products
+					</Typography>
 				</Grid>
 
 				{
 					products.map((value) => {
 						console.log(value)
 						return (
-							<Grid item>
-								<VendorProductCard product_id={value.id} productName={value.name} category={value.category_id} price={value.price} discount={value.discount} />
-							</Grid>
+							<VendorProductCard product_id={value.id} productName={value.name} category={value.category_id} price={value.price} discount={value.discount} />
 					)})
 				}
 				
-				
 				<Grid container item justify="center">
 					<Tooltip title="Add Product">
-						<Fab variant="extended" onClick={() => {window.location.href = "/vendor/addproduct/"}}>
+						<Fab variant="extended" title="Add a Product" onClick={() => {window.location.href = "/vendor/addproduct/"}}>
 								<AddIcon />
 								Add a Product
 						</Fab>

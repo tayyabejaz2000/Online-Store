@@ -13,7 +13,7 @@ class order:
     def addProduct(self, prod: product, quantity):
         try:
             o = orderedproduct(order=self.data,
-                               product=prod, quantity=quantity)
+                               product=prod.data, quantity=quantity)
             if (prod.removeStock(quantity)):
                 o.save()
         except:

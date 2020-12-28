@@ -1,5 +1,10 @@
 import React, { useState } from "react"
-import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom"
+import {
+	BrowserRouter as Router,
+	Switch,
+	Route,
+	Redirect
+} from "react-router-dom"
 import { ThemeProvider } from "@material-ui/core/styles"
 import CssBaseline from "@material-ui/core/CssBaseline"
 
@@ -18,6 +23,10 @@ import DarkTheme from "./Themes/darkTheme"
 import LightTheme from "./Themes/lightTheme"
 import MyAccount from "./Views/MyAccount"
 import AddProduct from "./Views/AddProduct"
+import EditProduct from "./Views/EditProduct"
+import Cart from "./Views/Cart"
+import AddBillingAddress from "./Views/AddBillingAddress"
+import PlaceOrder from "./Views/PlaceOrder"
 
 function App(props) {
 	const [dark_theme, changeThemePreference] = useState(true)
@@ -43,11 +52,20 @@ function App(props) {
 					<Route exact path="/vendor/addproduct">
 						<AddProduct />
 					</Route>
+					<Route path="/vendor/editproduct/:id">
+						<EditProduct />
+					</Route>
 					<Route exact path="/account">
 						<MyAccount />
 					</Route>
-					<Route exact path="/user">
-						{null}
+					<Route exact path="/user/addbillingaddress">
+						<AddBillingAddress />
+					</Route>
+					<Route exact path="/user/placeorder">
+						<PlaceOrder />
+					</Route>
+					<Route exact path="/cart">
+						<Cart />
 					</Route>
 					<Route path="/">
 						<Redirect to="/home"/>

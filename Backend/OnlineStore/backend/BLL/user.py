@@ -27,6 +27,9 @@ class user(account):
     def authWallet(self, password):
         return self.wallet.check_password(password)
 
+    def setWalletPassword(self, password):
+        self.wallet.setPassword(password)
+
     def addBalance(self, balance):
         self.wallet.addBalance(balance)
 

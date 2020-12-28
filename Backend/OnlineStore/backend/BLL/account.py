@@ -24,5 +24,15 @@ class account:
     def filter(*args, **kwargs):
         return AccountModel.objects.filter(*args, **kwargs)
 
+    def editAccount(self, username, password, email, first_name, last_name, phone_number):
+        self.data.username = username
+        self.data.email = email
+        self.data.first_name = first_name
+        self.data.last_name = last_name
+        self.data.phone_number = phone_number
+        if password is not None:
+            self.data.set_password(password)
+        self.data.save()
+
     def save(self):
         self.data.save()

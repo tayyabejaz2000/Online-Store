@@ -6,6 +6,7 @@ import {
 } from '@material-ui/core'
 import ProductCard from '../Components/ProductCard'
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
+import { addToCart } from '../Utilities/buyerUtilities';
 
 function UserProductCard(props) {
 	const controlButtons = (
@@ -17,7 +18,7 @@ function UserProductCard(props) {
 		>
 			<Grid item>
 				<Tooltip title="Add to Cart">
-					<Fab variant="extended" onClick={null}>
+					<Fab variant="extended" onClick={() => {addToCart(props.product_id, 1)}}>
 						<AddShoppingCartIcon />
 						Add to Cart
 					</Fab>
@@ -26,7 +27,7 @@ function UserProductCard(props) {
 		</Grid>
 	)
 	return (
-		<ProductCard productName={props.productName} category={props.category} price={props.price} quantity={props.quantity} control_buttons={controlButtons} onClick={props.onClick}/>
+		<ProductCard productName={props.productName} category={props.category} price={props.price} discount={props.discount} control_buttons={controlButtons} onClick={props.onClick}/>
 	)
 }
 

@@ -6,6 +6,7 @@ from .seller import seller
 from .products import products
 from .orders import orders
 from .complaints import complaints
+from django.forms.models import model_to_dict
 
 
 class Store:
@@ -35,6 +36,13 @@ class Store:
                                          user_data["first_name"], user_data["last_name"], user_data["user_type"],
                                          user_data["phone_number"])
 
+    def editUser(self, account_id, username, password, email, first_name, last_name, phone_number, wallet_password):
+        u = user(self.accounts.get(pk=account_id))
+        u.editAccount(username, password, email,
+                      first_name, last_name, phone_number)
+        if wallet_password is not None:
+            u.setWalletPassword(wallet_password)
+
     def logout_account(self, token):
         self.accounts.logout_account(token)
 
@@ -45,16 +53,31 @@ class Store:
             "user_type": a.user_type,
         }
 
+    def getAccountDetails(self, account_id):
+        a = self.accounts.get(pk=account_id)
+        account_details = model_to_dict(a)
+        account_details.pop("password")
+        return account_details
+
     # user.py functions
 
     def addBillingAddress(self, buyer_id, address):
         a = buyer(self.accounts.get(pk=buyer_id))
         a.addBillingAddress(address)
 
+    def getBillingAddresses(self, buyer_id):
+        a = buyer(self.accounts.get(pk=buyer_id))
+        return {"billing_addresses": list(a.billing_addresses.all().values())}
+
     def addProductToCart(self, buyer_id, product_id, quantity):
         b = buyer(self.accounts.get(pk=buyer_id))
         p = self.products.get(pk=product_id)
         b.addProductToCart(p, quantity)
+
+    def updateCart(self, buyer_id, product_id, quantity):
+        b = buyer(self.accounts.get(pk=buyer_id))
+        p = self.products.get(pk=product_id)
+        b.updateCart(p, quantity)
 
     def addBalance(self, user_id, balance, wallet_password):
         u = user(self.accounts.get(pk=user_id))
@@ -78,7 +101,7 @@ class Store:
 
     def getShop(self, seller_id):
         s = seller(self.accounts.get(pk=seller_id))
-        return s.shop.__dict__()
+        return model_to_dict(s.shop.data)
 
     def getSellerProducts(self, seller_id):
         s = seller(self.accounts.get(pk=seller_id))
@@ -93,11 +116,15 @@ class Store:
         self.products.addProduct(product_name, product_desc, quantity, price,
                                  discount, category_name, s)
 
+    def getProduct(self, product_id):
+        product = self.products.get(pk=product_id)
+        return model_to_dict(product)
+
     def removeProduct(self, product_id):
         self.products.removeProduct(product_id)
 
     def getAllProducts(self):
-        products = self.products.all()
+        products = self.products.filter(isRemoved=False)
         return {"products": list(products.values())}
 
     def updateProduct(self, product_id, product_name, product_desc, quantity, price, discount, category_name):
@@ -117,7 +144,7 @@ class Store:
         return self.complaints.all()
 
     def resolveComplaint(self, complaint_id, employee_id, response):
-        e = employee(account(self.accounts.get(pk=employee_id)))
+        e = employee(self.accounts.get(pk=employee_id))
         self.complaints.resolveComplaint(complaint_id, e, response)
 
     # Controller Functions
@@ -132,3 +159,15 @@ class Store:
         return {
             "categories": list(categories.values())
         }
+
+    def getCartProducts(self, buyer_id):
+        b = buyer(self.accounts.get(pk=buyer_id))
+        cartData = b.cart.getCartData()
+        return {"products": cartData[0], "total": cartData[1]}
+
+    def placeOrder(self, buyer_id, billing_address, discount, wallet_password):
+        b = buyer(self.accounts.get(pk=buyer_id))
+        if (b.wallet.authWallet(wallet_password)):
+            billingAddress = b.billing_addresses.filter(
+                billingAddress=billing_address).first()
+            self.orders.placeOrder(b, discount, billingAddress)

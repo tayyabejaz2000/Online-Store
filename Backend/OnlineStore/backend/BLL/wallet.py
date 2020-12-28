@@ -18,6 +18,10 @@ class wallet:
     def authWallet(self, password):
         return self.data.check_password(password)
 
+    def setPassword(self, password):
+        self.data.set_password(password)
+        self.save()
+
     def addBalance(self, balance):
         self.balance += balance
         self.save()

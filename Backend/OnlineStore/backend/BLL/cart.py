@@ -1,3 +1,5 @@
+from typing import Dict
+from django.forms.models import model_to_dict
 from .product import product
 from ..models import CartModel
 from .cartproduct import cartproduct
@@ -38,14 +40,43 @@ class cart:
 
     def addProduct(self, product, quantity):
         try:
-            c = cartproduct(cart=self.data, product=product, quantity=quantity)
-            c.save()
-        except:
+            cartProducts = self.cartProducts
+            # isUnique, always return 1 object
+            check = cartProducts.filter(product=product).first()
+            if (check is None):
+                c = cartproduct(cart=self.data, product=product,
+                                quantity=quantity)
+                c.save()
+            else:
+                check.quantity += quantity
+                check.save()
+        except Exception as e:
+            print("Exception Thrown: ", e)
             raise Exception("Unable to add Product to Cart")
+
+    def updateProduct(self, product, quantity):
+        try:
+            cart_product = cartproduct.get(cart=self.data, product=product)
+            cart_product.quantity = quantity
+            cart_product.save()
+        except Exception as e:
+            print("Exception Thrown: ", e)
+            raise Exception("Unable to update Product in Cart")
+
+    def getCartData(self):
+        CartData = []
+        cart_products = self.cartProducts.all()
+        for cart_product in cart_products:
+            cart_product_data = model_to_dict(cart_product)
+            cart_product_data["product"] = model_to_dict(
+                cart_product.product)
+            CartData.append(cart_product_data)
+        return CartData, self.netTotal
 
     def removeProduct(self, product):
         try:
-            self.cartProducts.filter(product=product).delete()
+            cartProduct = self.cartProducts.filter(product=product.data)
+            cartProduct.delete()
         except:
             raise Exception("Couldn't delete Cart Product")
 

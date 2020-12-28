@@ -3,12 +3,12 @@ import {
 	Grid,
 	Typography
 } from '@material-ui/core'
-import React from 'react'
-import { getAccountData } from '../Utilities/accountUtilities'
+import React, { useState } from 'react'
+import { getAccountDetails } from '../Utilities/accountUtilities'
 
 function MyAccount() {
-	let accountData = getAccountData()
-	console.log(accountData)
+	const [accountDetails, setAccountDetails] = useState({})
+	getAccountDetails()
 	return (
 		<Container>
 			<Grid
