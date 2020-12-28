@@ -75,3 +75,16 @@ export async function placeOrder(values) {
 		throw error
 	})
 }
+
+export async function getOrders() {
+	let orders = null
+	await axiosInstance.post('user/orders')
+	.then((response) => {
+		orders = response.data
+	})
+	.catch((error) => {
+		console.log(error)
+		throw error
+	})
+	return orders
+}

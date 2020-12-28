@@ -105,7 +105,7 @@ class InvoiceModel(models.Model):
 
 class OrderModel(models.Model):
     buyer = models.ForeignKey(AccountModel, on_delete=models.CASCADE,
-                              limit_choices_to={'user_type': 'B'}, related_name='ordes')
+                              limit_choices_to={'user_type': 'B'}, related_name='orders')
     created_on = models.DateTimeField(auto_now_add=True)
     invoice = models.OneToOneField(
         InvoiceModel, on_delete=models.CASCADE, related_name='order')

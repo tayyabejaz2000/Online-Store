@@ -113,6 +113,18 @@ class EditShop(APIView):
             return Response(data=str(e), status=status.HTTP_400_BAD_REQUEST)
 
 
+class GetShop(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def post(self, request):
+        try:
+            shopData = controller.getShop(request.user.id)
+            return Response(data=shopData, status=status.HTTP_200_OK)
+        except Exception as e:
+            print("Exception Thrown: ", e)  # Log error
+            return Response(data=str(e), status=status.HTTP_400_BAD_REQUEST)
+
+
 class AddProduct(APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
@@ -257,6 +269,30 @@ class OrderCart(APIView):
             controller.placeOrder(
                 request.user.id, request.data["billing_address"], request.data["discount"], request.data["wallet_password"])
             return Response(status=status.HTTP_200_OK)
+        except Exception as e:
+            print("Exception Thrown", e)  # Log Error
+            return Response(data=str(e), status=status.HTTP_400_BAD_REQUEST)
+
+
+class CancelOrder(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def post(self, request):
+        try:
+            controller.cancelOrder(request.user.id, request.data["order_id"])
+            return Response(status=status.HTTP_200_OK)
+        except Exception as e:
+            print("Exception Thrown", e)  # Log Error
+            return Response(data=str(e), status=status.HTTP_400_BAD_REQUEST)
+
+
+class GetOrders(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def post(self, request):
+        try:
+            orders = controller.getOrders(request.user.id)
+            return Response(data=orders, status=status.HTTP_200_OK)
         except Exception as e:
             print("Exception Thrown", e)  # Log Error
             return Response(data=str(e), status=status.HTTP_400_BAD_REQUEST)

@@ -1,4 +1,3 @@
-from abc import abstractmethod
 from .user import user
 from .cart import cart
 from .billingaddress import billingAddress

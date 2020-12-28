@@ -10,6 +10,18 @@ class order:
         else:
             self.data = OrderModel(*args, **kwargs)
 
+    @staticmethod
+    def all():
+        OrderModel.objects.all()
+
+    @staticmethod
+    def get(*args, **kwargs):
+        OrderModel.objects.get(*args, **kwargs)
+
+    @staticmethod
+    def filter(*args, **kwargs):
+        OrderModel.objects.get(*args, **kwargs)
+
     def addProduct(self, prod: product, quantity):
         try:
             o = orderedproduct(order=self.data,

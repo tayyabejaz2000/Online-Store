@@ -1,7 +1,18 @@
 import React, {
 	useState
 } from 'react'
-import { Button, Container, Divider, Grid, List, ListItem, ListItemText, Paper, TextField, Typography } from '@material-ui/core'
+import {
+	Button,
+	Container,
+	Divider,
+	Grid,
+	List,
+	ListItem,
+	ListItemText,
+	Paper,
+	TextField,
+	Typography
+} from '@material-ui/core'
 import { getCartProducts, updateCart } from '../Utilities/buyerUtilities'
 import { loginStyles } from '../MUI-Styles/Styles';
 

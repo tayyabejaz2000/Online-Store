@@ -1,6 +1,6 @@
 from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView
-from .views import AddProductToCart, GetAccountDetails, GetAllCategories, GetAllProducts, GetBillingAddresses, GetCartProducts, GetProduct, GetSellerProducts, GetUserData, Login, OrderCart, Signup, Logout, AddBillingAddress, AddProduct, EditShop, RemoveProduct, UpdateCart, UpdateProduct
+from .views import AddProductToCart, GetAccountDetails, GetAllCategories, GetAllProducts, CancelOrder, GetBillingAddresses, GetCartProducts, GetOrders, GetProduct, GetSellerProducts, GetShop, GetUserData, Login, OrderCart, Signup, Logout, AddBillingAddress, AddProduct, EditShop, RemoveProduct, UpdateCart, UpdateProduct
 
 urlpatterns = [
     # login and get token
@@ -25,12 +25,15 @@ urlpatterns = [
     path('account/data', GetAccountDetails.as_view()),
 
     path('user/cart', GetCartProducts.as_view()),
+    path('user/orders', GetOrders.as_view()),
     path('user/place-order', OrderCart.as_view()),
+    path('user/cancel-order', CancelOrder.as_view()),
     path('user/add-to-cart', AddProductToCart.as_view()),
     path('user/update-cart', UpdateCart.as_view()),
     path('user/add-billing-address', AddBillingAddress.as_view()),
     path('user/get-billing-addresses', GetBillingAddresses.as_view()),
 
     path('seller/products', GetSellerProducts.as_view()),
-    path('seller/set-shop', EditShop.as_view()),
+    path('seller/shop', GetShop.as_view()),
+    path('seller/edit-shop', EditShop.as_view()),
 ]

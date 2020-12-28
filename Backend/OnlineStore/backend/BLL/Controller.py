@@ -171,3 +171,12 @@ class Store:
             billingAddress = b.billing_addresses.filter(
                 billingAddress=billing_address).first()
             self.orders.placeOrder(b, discount, billingAddress)
+
+    def cancelOrder(self, buyer_id, order_id):
+        b = buyer(self.accounts.get(pk=buyer_id))
+        self.orders.cancelOrder(b, order_id)
+
+    def getOrders(self, buyer_id):
+        b = buyer(self.accounts.get(pk=buyer_id))
+        orders = self.orders.getOrders(b)
+        return orders

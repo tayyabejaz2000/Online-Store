@@ -28,3 +28,6 @@ class invoice:
 
     def save(self):
         self.data.save()
+
+    def delete(self):
+        self.data.delete()
