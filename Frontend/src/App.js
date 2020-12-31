@@ -31,6 +31,8 @@ import AddComplaint from "./Views/AddComplaint"
 //Themes
 import DarkTheme from "./Themes/darkTheme"
 import LightTheme from "./Themes/lightTheme"
+import Complaints from "./Views/Complaints"
+import ResolveComplaint from "./Views/ResolveComplaint"
 
 function App(props) {
 	const [dark_theme, changeThemePreference] = useState(true)
@@ -79,6 +81,12 @@ function App(props) {
 					</Route>
 					<Route exact path="/product/review/:id">
 						<AddReview />
+					</Route>
+					<Route exact path="/employee/complaints">
+						<Complaints />
+					</Route>
+					<Route exact path="/employee/complaints/resolve/:id">
+						<ResolveComplaint />
 					</Route>
 					<Route exact path="/cart">
 						<Cart />

@@ -144,6 +144,9 @@ class Store:
     def getAllComplaints(self):
         return self.complaints.all()
 
+    def getUnresolvedComplaints(self):
+        return list(self.complaints.filter(lookup_employee=None).values())
+
     def resolveComplaint(self, complaint_id, employee_id, response):
         e = employee(self.accounts.get(pk=employee_id))
         self.complaints.resolveComplaint(complaint_id, e, response)

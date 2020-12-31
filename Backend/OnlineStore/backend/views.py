@@ -336,3 +336,28 @@ class ReturnItem(APIView):
         except Exception as e:
             print("Exception Thrown", e)  # Log Error
             return Response(data=str(e), status=status.HTTP_400_BAD_REQUEST)
+
+
+class GetComplaints(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def post(self, request):
+        try:
+            complaints = controller.getUnresolvedComplaints()
+            return Response(data=complaints, status=status.HTTP_200_OK)
+        except Exception as e:
+            print("Exception Thrown", e)  # Log Error
+            return Response(data=str(e), status=status.HTTP_400_BAD_REQUEST)
+
+
+class ResolveComplaint(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def post(self, request):
+        try:
+            controller.resolveComplaint(request.data["complaint_id"], request.user.id,
+                                        request.data["response"])
+            return Response(status=status.HTTP_200_OK)
+        except Exception as e:
+            print("Exception Thrown", e)  # Log Error
+            return Response(data=str(e), status=status.HTTP_400_BAD_REQUEST)

@@ -67,7 +67,7 @@ export async function placeOrder(values) {
 		wallet_password: values.wallet_password,
 	})
 	.then((response) => {
-		if (response.status === 200)
+		if (response.status === 201)
 			window.location.href = "/home"
 	})
 	.catch((error) => {

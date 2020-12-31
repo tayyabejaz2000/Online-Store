@@ -16,6 +16,9 @@ class complaints:
     def filter(self, *args, **kwargs):
         return complaint.filter(*args, **kwargs)
 
+    def exclude(self, *args, **kwargs):
+        return complaint.exclude(*args, **kwargs)
+
     def resolveComplaint(self, complaint_id, employee, response):
         c = complaint(self.get(pk=complaint_id))
         c.resolve(employee, response)

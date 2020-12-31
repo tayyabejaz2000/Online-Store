@@ -20,6 +20,10 @@ class complaint:
     def filter(*args, **kwargs):
         return ComplaintModel.objects.filter(*args, **kwargs)
 
+    @staticmethod
+    def exclude(*args, **kwargs):
+        return ComplaintModel.objects.exclude(*args, **kwargs)
+
     def getComplaintBody(self):
         return self.data.complaint_body
 
@@ -50,7 +54,7 @@ class complaint:
 
     def resolve(self, employee, response: str):
         try:
-            self.lookup_employee = employee
+            self.lookup_employee = employee.data
             self.answer_body = response
             self.save()
         except:
