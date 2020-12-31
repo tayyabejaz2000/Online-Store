@@ -108,3 +108,15 @@ export function returnItem(ordered_product_id) {
 		throw error
 	})
 }
+
+export function addBalance(values) {
+	axiosInstance.post('account/add-balance', values)
+	.then((response) => {
+		if (response.status === 200)
+			window.location.href = "/home"
+	})
+	.catch((error) => {
+		console.log(error)
+		throw error
+	})
+}

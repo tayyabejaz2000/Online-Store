@@ -361,3 +361,16 @@ class ResolveComplaint(APIView):
         except Exception as e:
             print("Exception Thrown", e)  # Log Error
             return Response(data=str(e), status=status.HTTP_400_BAD_REQUEST)
+
+
+class AddBalance(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def post(self, request):
+        try:
+            controller.addBalance(request.user.id, request.data["amount"],
+                                  request.data["wallet_password"])
+            return Response(status=status.HTTP_200_OK)
+        except Exception as e:
+            print("Exception Thrown", e)  # Log Error
+            return Response(data=str(e), status=status.HTTP_400_BAD_REQUEST)

@@ -1,6 +1,6 @@
 from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView
-from .views import AddComplaint, AddProductToCart, AddReview, CancelOrderItem, GetAccountDetails, GetAllCategories, GetAllProducts, GetBillingAddresses, GetCartProducts, GetComplaints, GetOrders, GetProduct, GetSellerProducts, GetShop, GetUserData, Login, OrderCart, ResolveComplaint, ReturnItem, Signup, Logout, AddBillingAddress, AddProduct, EditShop, RemoveProduct, UpdateCart, UpdateProduct
+from .views import AddBalance, AddComplaint, AddProductToCart, AddReview, CancelOrderItem, GetAccountDetails, GetAllCategories, GetAllProducts, GetBillingAddresses, GetCartProducts, GetComplaints, GetOrders, GetProduct, GetSellerProducts, GetShop, GetUserData, Login, OrderCart, ResolveComplaint, ReturnItem, Signup, Logout, AddBillingAddress, AddProduct, EditShop, RemoveProduct, UpdateCart, UpdateProduct
 
 urlpatterns = [
     # login and get token
@@ -23,6 +23,7 @@ urlpatterns = [
 
     path('account/min-data', GetUserData.as_view()),
     path('account/data', GetAccountDetails.as_view()),
+    path('account/add-balance', AddBalance.as_view()),
 
     path('user/cart', GetCartProducts.as_view()),
     path('user/orders', GetOrders.as_view()),

@@ -33,6 +33,7 @@ import DarkTheme from "./Themes/darkTheme"
 import LightTheme from "./Themes/lightTheme"
 import Complaints from "./Views/Complaints"
 import ResolveComplaint from "./Views/ResolveComplaint"
+import AddBalance from "./Views/AddBalance"
 
 function App(props) {
 	const [dark_theme, changeThemePreference] = useState(true)
@@ -66,6 +67,9 @@ function App(props) {
 					</Route>
 					<Route exact path="/account">
 						<MyAccount />
+					</Route>
+					<Route exact path="/account/addbalance">
+						<AddBalance />
 					</Route>
 					<Route exact path="/user/addbillingaddress">
 						<AddBillingAddress />
