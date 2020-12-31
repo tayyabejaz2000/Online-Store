@@ -8,5 +8,17 @@ class orderedproduct:
         else:
             self.data = OrderedProductModel(*args, **kwargs)
 
+    @staticmethod
+    def all():
+        return OrderedProductModel.objects.all()
+
+    @staticmethod
+    def get(*args, **kwargs):
+        return OrderedProductModel.objects.get(*args, **kwargs)
+
+    @staticmethod
+    def filter(*args, **kwargs):
+        return OrderedProductModel.objects.filter(*args, **kwargs)
+
     def save(self):
         self.data.save()

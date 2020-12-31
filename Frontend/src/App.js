@@ -24,11 +24,13 @@ import Cart from "./Views/Cart"
 import AddBillingAddress from "./Views/AddBillingAddress"
 import PlaceOrder from "./Views/PlaceOrder"
 import EditShop from "./Views/EditShop"
+import Orders from "./Views/Orders"
+import AddReview from "./Views/AddReview"
+import AddComplaint from "./Views/AddComplaint"
 
 //Themes
 import DarkTheme from "./Themes/darkTheme"
 import LightTheme from "./Themes/lightTheme"
-import Orders from "./Views/Orders"
 
 function App(props) {
 	const [dark_theme, changeThemePreference] = useState(true)
@@ -66,11 +68,17 @@ function App(props) {
 					<Route exact path="/user/addbillingaddress">
 						<AddBillingAddress />
 					</Route>
+					<Route exact path="/complaint">
+						<AddComplaint />
+					</Route>
 					<Route exact path="/user/placeorder">
 						<PlaceOrder />
 					</Route>
 					<Route exact path="/user/orders">
 						<Orders />
+					</Route>
+					<Route exact path="/product/review/:id">
+						<AddReview />
 					</Route>
 					<Route exact path="/cart">
 						<Cart />

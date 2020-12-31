@@ -1,8 +1,11 @@
-from django.forms.models import model_to_dict
-from .order import order
-from .buyer import buyer
-from .product import product
+from .BL_Data import SHOP_CUT
+from .wallet import wallet
 from .invoice import invoice
+from .product import product
+from .buyer import buyer
+from .order import order
+from .orderedproduct import orderedproduct
+from django.forms.models import model_to_dict
 
 
 class orders:
@@ -17,10 +20,10 @@ class orders:
 
     def placeOrder(self, buyer: buyer, discount: int, billingAddress):
         cart = buyer.cart
-        wallet = buyer.wallet
+        buyer_wallet = buyer.wallet
         net = cart.netTotal
         i = invoice(net=net, discount=discount)
-        if (wallet.balance < net):
+        if (buyer_wallet.balance < net):
             raise Exception("Wallet low on Balance, Recharge")
         i.save()
         o = order(buyer=buyer.data, invoice=i.data, address=billingAddress)
@@ -28,18 +31,24 @@ class orders:
         cart_products = cart.cartProducts.all()
         for cart_product in cart_products:
             prod = product(cart_product.product)
+            seller_wallet = wallet(prod.shop.seller.wallet)
+            net = prod.net * cart_product.quantity
+            seller_profit = net - (net * SHOP_CUT/100)
+            seller_wallet.addBalance(seller_profit)
             o.addProduct(prod, cart_product.quantity)
             cart.removeProduct(prod)
-        wallet.removeBalance(net)
+        buyer_wallet.removeBalance(net)
 
-    def cancelOrder(self, buyer: buyer, order_id):
-        o = order(order.get(pk=order_id))
-        i = invoice(o.data.invoice)
-        buyer.addBalance(i.total)
-        ordered_products = o.data.products.all()
-        for ordered_product in ordered_products:
-            ordered_product.product.stock += ordered_product.quantity
-        i.delete()
+    def cancelOrderItem(self, buyer: buyer, ordered_product_id):
+        o = orderedproduct.get(pk=ordered_product_id)
+        prod = product(o.product)
+        prod.stock += o.quantity
+        prod.save()
+        o.delete()
+        inv = o.order.invoice
+        inv.net -= prod.net
+        inv.save()
+        buyer.addBalance(prod.net)
 
     def getOrders(self, buyer: buyer):
         ordered_products = []
@@ -55,3 +64,12 @@ class orders:
                 o["ordered_products"].append(op)
             ordered_products.append(o)
         return ordered_products
+
+    def returnItem(self, buyer: buyer, ordered_product_id):
+        o = orderedproduct.get(pk=ordered_product_id)
+        prod = product(o.product)
+        prod.stock += o.quantity
+        o.status = 'R'
+        prod.save()
+        o.save()
+        buyer.addBalance(prod.net)

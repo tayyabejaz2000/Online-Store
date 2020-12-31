@@ -43,8 +43,7 @@ class products:
         prod.update(product_name, product_description, product_stock,
                     product_price, product_discount, product_category)
 
-    def addReview(self, buyer, product_id, stars, feedback):
-        prod = product(self.get(pk=product_id))
+    def addReview(self, buyer, prod, stars, feedback):
         self.reviews.addReview(buyer, prod, stars, feedback)
 
     def addCategory(self, category_name):

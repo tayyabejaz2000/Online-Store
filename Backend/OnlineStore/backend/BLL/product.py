@@ -74,6 +74,10 @@ class product:
     def getisRemoved(self):
         return self.data.isRemoved
 
+    @property
+    def net(self):
+        return self.price - (self.price * (self.discount/100))
+
     # Setters
 
     def setName(self, value):

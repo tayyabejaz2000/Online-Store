@@ -14,5 +14,5 @@ class reviews:
 
     def addReview(self, buyer, product, stars, feedback):
         r = review(stars=stars, feedback=feedback,
-                   product=product, buyer=buyer)
+                   product=product.data, buyer=buyer.data)
         r.save()

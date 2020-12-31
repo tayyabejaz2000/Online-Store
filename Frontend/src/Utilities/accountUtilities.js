@@ -95,3 +95,11 @@ export async function getAccountDetails() {
 	})
 	return details
 }
+
+export async function addComplaint(values) {
+	await axiosInstance.post('user/add-complaint', values)
+	.catch((error) => {
+		console.log(error)
+		throw error
+	})
+}

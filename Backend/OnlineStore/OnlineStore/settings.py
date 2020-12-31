@@ -67,7 +67,8 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),  # TTL for Access Token
     'REFRESH_TOKEN_LIFETIME': timedelta(days=14),  # TTL for Refresh Token
     'ROTATE_REFRESH_TOKENS': True,
-    'BLACKLIST_AFTER_ROTATION': False,
+    # Changed 'BLACKLIST_AFTER_ROTATION' to True, if error change to False
+    'BLACKLIST_AFTER_ROTATION': True,
     'ALGORITHM': 'HS256',
     'SIGNING_KEY': SECRET_KEY,
     'VERIFYING_KEY': None,

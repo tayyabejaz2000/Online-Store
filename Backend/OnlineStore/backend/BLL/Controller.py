@@ -133,7 +133,8 @@ class Store:
 
     def addReview(self, buyer_id, product_id, stars, feedback):
         b = buyer(self.accounts.get(pk=buyer_id))
-        self.products.addReview(b, product_id, stars, feedback)
+        prod = self.products.get(pk=product_id)
+        self.products.addReview(b, prod, stars, feedback)
 
     # complaints.py
     def addComplaint(self, user_id, complaint_body):
@@ -172,11 +173,15 @@ class Store:
                 billingAddress=billing_address).first()
             self.orders.placeOrder(b, discount, billingAddress)
 
-    def cancelOrder(self, buyer_id, order_id):
+    def cancelOrderItem(self, buyer_id, ordered_item_id):
         b = buyer(self.accounts.get(pk=buyer_id))
-        self.orders.cancelOrder(b, order_id)
+        self.orders.cancelOrderItem(b, ordered_item_id)
 
     def getOrders(self, buyer_id):
         b = buyer(self.accounts.get(pk=buyer_id))
         orders = self.orders.getOrders(b)
         return orders
+
+    def returnItem(self, buyer_id, ordered_product_id):
+        b = buyer(self.accounts.get(pk=buyer_id))
+        self.orders.returnItem(b, ordered_product_id)

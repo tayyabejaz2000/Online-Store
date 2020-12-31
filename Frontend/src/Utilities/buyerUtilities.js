@@ -88,3 +88,23 @@ export async function getOrders() {
 	})
 	return orders
 }
+
+export function cancelOrder(ordered_product_id) {
+	axiosInstance.post('/user/cancel-item', {
+		ordered_product_id: ordered_product_id
+	})
+	.catch((error) => {
+		console.log(error)
+		throw error
+	})
+}
+
+export function returnItem(ordered_product_id) {
+	axiosInstance.post('/user/return-item', {
+		ordered_product_id: ordered_product_id
+	})
+	.catch((error) => {
+		console.log(error)
+		throw error
+	})
+}

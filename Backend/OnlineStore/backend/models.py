@@ -142,14 +142,6 @@ class ComplaintModel(models.Model):
     lookup_employee = models.ForeignKey(AccountModel, on_delete=models.CASCADE, null=True, default=None,
                                         limit_choices_to={'user_type': 'E'}, related_name='lookup_complaints')
 
-    def __dict__(self):
-        return {
-            "complaint_body": self.complaint_body,
-            "answer_body": self.answer_body,
-            "user": self.user.id,
-            "lookup_employee": self.lookup_employee,
-        }
-
 
 class ReviewModel(models.Model):
     stars = models.PositiveIntegerField(default=0,

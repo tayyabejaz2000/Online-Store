@@ -74,3 +74,11 @@ export async function getAllProducts() {
 	})
 	return products
 }
+
+export async function addReview(values) {
+	await axiosInstance.post('/products/add-review', values)
+	.catch((error) => {
+		console.log(error)
+		throw error
+	})
+}

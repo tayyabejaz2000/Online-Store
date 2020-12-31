@@ -34,8 +34,7 @@ class cart:
         for cart_product in cart_products:
             prod = product(cart_product.product)
             if (cart_product.quantity <= prod.stock):
-                net += cart_product.quantity * (prod.price -
-                                                (prod.price * (prod.discount/100)))
+                net += cart_product.quantity * prod.net
         return net
 
     def addProduct(self, product, quantity):

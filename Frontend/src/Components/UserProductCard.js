@@ -2,10 +2,11 @@ import React from 'react'
 import {
 	Tooltip,
 	Grid,
-	Fab,
+	IconButton
 } from '@material-ui/core'
 import ProductCard from '../Components/ProductCard'
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
+import StarIcon from '@material-ui/icons/Star';
 import { addToCart } from '../Utilities/buyerUtilities';
 
 function UserProductCard(props) {
@@ -13,15 +14,20 @@ function UserProductCard(props) {
 		<Grid
 			container
 			item
-			justify="center"
+			direction="row-reverse"
+			justify="flex-start"
 			alignContent="baseline"
 		>
 			<Grid item>
 				<Tooltip title="Add to Cart">
-					<Fab variant="extended" onClick={() => {addToCart(props.product_id, 1)}}>
+					<IconButton onClick={() => {addToCart(props.product_id, 1)}}>
 						<AddShoppingCartIcon />
-						Add to Cart
-					</Fab>
+					</IconButton>
+				</Tooltip>
+				<Tooltip title="Add Review">
+					<IconButton onClick={() => {window.location.href="/product/review/" + props.product_id}}>
+						<StarIcon />
+					</IconButton>
 				</Tooltip>
 			</Grid>
 		</Grid>
